@@ -58,7 +58,7 @@ pub async fn send(
         .queue_url(queue_url)
         .message_body(&message.body)
         //.message_group_id(&message.group)
-        .message_deduplication_id(&message.id)
+        //.message_deduplication_id(&message.id)
         // If the queue is FIFO, you need to set .message_deduplication_id
         // or configure the queue for ContentBasedDeduplication.
         .send()

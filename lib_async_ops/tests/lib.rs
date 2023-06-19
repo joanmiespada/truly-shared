@@ -1,5 +1,5 @@
 use lib_async_ops::sqs::{create, recieve, send, SQSMessage};
-use lib_config::{config::Config, infra::build_local_stack_connection};
+use lib_config::{config::Config, infra::build_local_stack_connection, environment::{DEV_ENV, ENV_VAR_ENVIRONMENT}};
 use spectral::{assert_that, result::ResultAssertions};
 use std::env;
 use testcontainers::*;
@@ -8,7 +8,7 @@ use uuid::Uuid;
 #[tokio::test]
 async fn test_queues() -> Result<(), Box<dyn std::error::Error>> {
     env::set_var("RUST_LOG", "debug");
-    env::set_var("ENVIRONMENT", "development");
+    env::set_var(ENV_VAR_ENVIRONMENT, DEV_ENV);
 
     env_logger::builder().is_test(true).init();
 
