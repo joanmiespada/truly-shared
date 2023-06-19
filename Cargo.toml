@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "lib_config",
+    "lib_async_ops",
+    "lib_video_objs"
+]
+
+
