@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 use serde::Deserialize;
+use url::Url;
 
 pub static ENV_VAR_ENVIRONMENT: &str = "ENVIRONMENT";
 pub static ENV_VAR_PROJECT_LABEL: &str = "PROJECT";
@@ -36,6 +37,9 @@ pub struct EnvironmentVariables {
     bucket_video_permanent: Option<String>,
 
     video_result_topic: Option<String>,
+
+    telemetry: Option<bool>,
+    telemetry_endpoint: Option<Url>
 }
 
 impl EnvironmentVariables {
@@ -165,6 +169,20 @@ impl EnvironmentVariables {
 
     pub fn set_video_result_topic(&mut self, value: String) {
         self.video_result_topic = Some(value.clone());
+    }
+    
+    pub fn telemetry(&self) -> Option<bool> {
+        self.telemetry.clone()
+    }
+    pub fn set_telemetry(&mut self, value: bool) {
+        self.telemetry = Some(value);
+    }
+    
+    pub fn telemetry_endpoint(&self) -> Option<Url> {
+        self.telemetry_endpoint.clone()
+    }
+    pub fn set_telemetry_endpoint(&mut self, value: Url) {
+        self.telemetry_endpoint = Some(value);
     }
     
 }

@@ -11,10 +11,7 @@ crate-type=["lib"]
 name="integration"
 path="tests/lib.rs"
 
-
-
 [dependencies]
-actix-web = "4.3.1"
 aws-sdk-dynamodb = "0.28.0"
 aws-config = "0.55.3"
 env_logger = "0.10.0"
@@ -28,6 +25,13 @@ aws-types = "0.55.3"
 aws-sdk-kms = "0.28.0"
 base64 = "0.21.2"
 async-trait = "0.1.68"
+opentelemetry = { version = "0.19.0", default-features = false, features = ["trace", "rt-tokio"] }
+opentelemetry-otlp = "0.12.0"
+opentelemetry-semantic-conventions = "0.11.0"
+tracing-bunyan-formatter = "0.3.7"
+tracing-opentelemetry = "0.19.0"
+tracing-subscriber = { version = "0.3.17", features = ["env-filter"] }
+url = "2.4.0"
 
 [dev-dependencies]
 env_logger = "0.10.0"
