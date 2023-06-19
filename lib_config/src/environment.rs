@@ -19,12 +19,7 @@ pub struct EnvironmentVariables {
     rust_log: String,
     aws_region: Option<String>,
     aws_endpoint: Option<String>,
-
-    //migrated to Dynamodb Tables
-    //blockchain_url: Option<String>,
-    //blockchain_gateway_api_key: Option<String>,
-    //contract_address: Option<String>,
-    //contract_owner_address: Option<String>,
+    
     contract_id: u16,
 
     kms_key_id: Option<String>,
@@ -36,6 +31,11 @@ pub struct EnvironmentVariables {
     shorter_video_out_topic: Option<String>,
 
     minting_fails_topic: Option<String>,
+
+    bucket_video_temp: Option<String>,
+    bucket_video_permanent: Option<String>,
+
+    video_result_topic: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -88,31 +88,6 @@ impl EnvironmentVariables {
         self.contract_id = val;
     }
 
-    // pub fn blockchain_url(&self) -> &String {
-    //     let aux = self.blockchain_url.as_ref().unwrap();
-    //     return aux;
-    // }
-
-    // pub fn set_blockchain_url(&mut self, new_url: String) {
-    //     self.blockchain_url = Some(new_url.clone());
-    // }
-
-    // pub fn contract_address(&self) -> &String {
-    //     let aux = self.contract_address.as_ref().unwrap();
-    //     return aux;
-    // }
-    // pub fn set_contract_address(&mut self, new_addres: String) {
-    //     self.contract_address = Some(new_addres.clone());
-    // }
-
-    // pub fn contract_owner_address(&self) -> &String {
-    //     let aux = self.contract_owner_address.as_ref().unwrap();
-    //     return aux;
-    // }
-    // pub fn set_contract_owner_address(&mut self, value: String) {
-    //     self.contract_owner_address = Some(value.clone());
-    // }
-
     pub fn kms_key_id(&self) -> &String {
         let aux = self.kms_key_id.as_ref().unwrap();
         return aux;
@@ -120,14 +95,7 @@ impl EnvironmentVariables {
     pub fn set_kms_key_id(&mut self, value: String) {
         self.kms_key_id = Some(value.clone());
     }
-    /*
-    pub fn blockchain_confirmations(&self) -> &usize {
-        let aux = self.blockchain_confirmations.as_ref().unwrap();
-        return aux;
-    }
-    pub fn set_blockchain_confirmations(&mut self, value: usize) {
-        self.blockchain_confirmations = Some(value.clone());
-    }*/
+    
     pub fn queue_mint_async(&self) -> &String {
         let aux = self.queue_mint_async.as_ref().unwrap();
         return aux;
@@ -151,13 +119,6 @@ impl EnvironmentVariables {
         self.topic_arn_mint_async = Some(value.clone());
     }
 
-    // pub fn blockchain_gateway_api_key(&self)-> &String{
-    //     self.blockchain_gateway_api_key.as_ref().unwrap()
-    // }
-    // pub fn set_blockchain_gateway_api_key(&mut self, value: String) {
-    //     self.blockchain_gateway_api_key = Some(value.clone());
-    // }
-
     pub fn topic_arn_shorter_video_start(&self) -> &String {
         self.shorter_video_in_topic.as_ref().unwrap()
     }
@@ -178,6 +139,34 @@ impl EnvironmentVariables {
     pub fn set_topic_arn_mint_fails(&mut self, value: String) {
         self.minting_fails_topic = Some(value.clone());
     }
+
+    pub fn bucket_video_temp(&self) -> &String {
+        let aux = self.bucket_video_temp.as_ref().unwrap();
+        return aux;
+    }
+
+    pub fn set_bucket_video_temp(&mut self, value: String) {
+        self.bucket_video_temp = Some(value.clone());
+    }
+
+    pub fn bucket_video_permanent(&self) -> &String {
+        let aux = self.bucket_video_permanent.as_ref().unwrap();
+        return aux;
+    }
+
+    pub fn set_bucket_video_permanent(&mut self, value: String) {
+        self.bucket_video_permanent = Some(value.clone());
+    }
+
+    pub fn video_result_topic(&self) -> &String {
+        let aux = self.video_result_topic.as_ref().unwrap();
+        return aux;
+    }
+
+    pub fn set_video_result_topic(&mut self, value: String) {
+        self.video_result_topic = Some(value.clone());
+    }
+    
 }
 
 impl Display for EnvironmentVariables {
