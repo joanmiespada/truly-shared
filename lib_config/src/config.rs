@@ -65,31 +65,41 @@ impl Config {
 
         let env = self.env_variables.as_ref().unwrap();
         let config: SdkConfig;
-        if env.environment() == DEV_ENV {
-            let region_provider =
-                RegionProviderChain::first_try(Region::new(env.aws_region().to_owned()));
+
+        let env_flag = match env.environment() {
+            None => panic!("error: environment variable not set up!"),
+            Some(env_flag) => env_flag,
+        };
+        let aws_region_flag = match env.aws_region() {
+            None => panic!("error: aws region variable not set up!"),
+            Some(value) => value,
+        };
+        let aws_endpoint_flag = match env.aws_endpoint() {
+            None => panic!("error: aws endpoint variable not set up!"),
+            Some(value) => value,
+        };
+
+        if env_flag == DEV_ENV {
+            let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
             let creden = aws_config::profile::ProfileFileCredentialsProvider::builder()
                 .profile_name("localstack");
             config = aws_config::from_env()
                 .credentials_provider(creden.build())
                 .region(region_provider)
-                .endpoint_url(env.aws_endpoint().clone())
+                .endpoint_url(aws_endpoint_flag)
                 //.endpoint_resolver(endpoint_resolver.unwrap())
                 .load()
                 .await;
-        } else if env.environment() == PROD_ENV {
+        } else if env_flag == PROD_ENV {
             let region_provider = RegionProviderChain::default_provider().or_else("eu-central-1");
             config = aws_config::from_env().region(region_provider).load().await;
-        } else if env.environment() == STAGE_ENV {
-            let region_provider =
-                RegionProviderChain::first_try(Region::new(env.aws_region().to_owned()));
+        } else if env_flag == STAGE_ENV {
+            let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
             config = aws_config::from_env().region(region_provider).load().await;
-        } else {
-            panic!(
-                "environment variable ENVIRONMENT configured wrongly: {}",
-                env.environment()
-            )
-        }
+        }else{
+            panic!("envioronment flag has incorrect value")
+        } 
+
         self.aws_config = Some(config);
     }
 
