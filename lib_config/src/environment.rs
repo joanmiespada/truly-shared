@@ -19,6 +19,7 @@ pub struct EnvironmentVariables {
     hmac_secret: Option<String>,
     rust_log: Option<String>,
     aws_region: Option<String>,
+    aws_regions: Option<String>,
     aws_endpoint: Option<String>,
 
     contract_id: Option<u16>,
@@ -51,6 +52,7 @@ impl EnvironmentVariables {
             hmac_secret: None,
             rust_log: None,
             aws_region: None,
+            aws_regions: None,
             aws_endpoint: None,
             contract_id: None,
             kms_key_id: None,
@@ -100,6 +102,19 @@ impl EnvironmentVariables {
     pub fn aws_region(&self) -> Option<String> {
         self.aws_region.clone()
     }
+    
+    pub fn set_aws_regions(&mut self, value: String ) {
+        self.aws_regions = Some(value);
+    }
+    pub fn aws_regions(&self) -> Vec<String> {
+        match self.aws_regions.clone() {
+            None => return Vec::new(),
+            Some(items) =>{
+                return items.split(',').map(|i| i.to_string() ).collect();
+            }
+        }
+    }
+
     pub fn aws_endpoint(&self) -> Option<String> {
         self.aws_endpoint.clone()
     }
@@ -209,7 +224,8 @@ impl Display for EnvironmentVariables {
             "{{ 'env': '{:?}', 'rust_log': '{:?}', 'aws': '{:?}', }}",
             self.environment,
             self.rust_log,
-            self.aws_region //TODO add other fields
+            self.aws_region 
+            //TODO add other fields
         )
     }
 }
