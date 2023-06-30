@@ -6,13 +6,13 @@ use base64::{engine::general_purpose, Engine as _};
 
 use crate::{
     config::Config,
-    secrets::{SECRETS_MANAGER_APP_KEYS, SECRETS_MANAGER_SECRET_KEY},
+    secrets::{SECRETS_MANAGER_APP_KEYS},
 };
 
 const TAG_PROJECT: &str = "Project";
 const TAG_VALUE: &str = "Truly";
 
-pub async fn create_secret_manager_keys(
+pub async fn create_secret_manager_with_values(
     secrets_json: &str,
     client: &aws_sdk_secretsmanager::Client,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -32,27 +32,28 @@ pub async fn create_secret_manager_keys(
     Ok(())
 }
 
-pub async fn create_secret_manager_secret_key(
-    client: &aws_sdk_secretsmanager::Client,
-) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let aux = client
-        .create_secret()
-        .name(SECRETS_MANAGER_SECRET_KEY.to_string())
-        .secret_string("--")
-        .tags(
-            aws_sdk_secretsmanager::types::Tag::builder()
-                .key(TAG_PROJECT.to_owned())
-                .value(TAG_VALUE.to_owned())
-                .build(),
-        )
-        .send()
-        .await;
-    match aux {
-        Err(e) => panic!("{}", e.to_string()),
-        Ok(_) => Ok(()),
-    }
-}
+// pub async fn create_secret_manager_secret_key(
+//     client: &aws_sdk_secretsmanager::Client,
+// ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+//     let aux = client
+//         .create_secret()
+//         .name(SECRETS_MANAGER_SECRET_KEY.to_string())
+//         .secret_string("--")
+//         .tags(
+//             aws_sdk_secretsmanager::types::Tag::builder()
+//                 .key(TAG_PROJECT.to_owned())
+//                 .value(TAG_VALUE.to_owned())
+//                 .build(),
+//         )
+//         .send()
+//         .await;
+//     match aux {
+//         Err(e) => panic!("{}", e.to_string()),
+//         Ok(_) => Ok(()),
+//     }
+// }
 
+// Only useful for testing, creation keys are manual or scripted.
 pub async fn create_key(
     client: &aws_sdk_kms::Client,
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
@@ -93,7 +94,7 @@ pub async fn build_local_stack_connection(host_port: u16) -> SdkConfig {
     return shared_config;
 }
 
-pub async fn store_secret_key(
+pub async fn cypher_with_secret_key(
     info_to_be_encrypted: &str,
     kms_key_id: &str,
     config: &Config,
@@ -119,7 +120,7 @@ pub async fn store_secret_key(
     Ok(value)
 }
 
-pub async fn restore_secret_key(
+pub async fn uncypher_with_secret_key(
     info_to_be_decyphered: String,
     kms_key_id: &str,
     config: &Config,

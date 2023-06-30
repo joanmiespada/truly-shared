@@ -1,8 +1,8 @@
 use lib_config::{
     config::Config,
     infra::{
-        build_local_stack_connection, create_key, create_secret_manager_keys,
-        create_secret_manager_secret_key, restore_secret_key, store_secret_key,
+        build_local_stack_connection, create_key, create_secret_manager_with_values,
+        uncypher_with_secret_key, cypher_with_secret_key,
     }, environment::DEV_ENV, environment::ENV_VAR_ENVIRONMENT
 };
 use std::env;
@@ -38,13 +38,13 @@ async fn set_up_secret() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
         "JWT_TOKEN_BASE": "localtest_jwt_sd543ERGds235$%^"
     }
     "#;
-    create_secret_manager_keys(secrets_json, &secrets_client).await?;
-    create_secret_manager_secret_key(&secrets_client).await?;
+    create_secret_manager_with_values(secrets_json, &secrets_client).await?;
+    //create_secret_manager_secret_key(&secrets_client).await?;
 
     let secret: &str = "4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d"; // secret key example
 
-    let cyphered = store_secret_key(secret, kms_id.as_str(), &config).await?;
-    let res = restore_secret_key(cyphered, kms_id.as_str(), &config).await?;
+    let cyphered = cypher_with_secret_key(secret, kms_id.as_str(), &config).await?;
+    let res = uncypher_with_secret_key(cyphered, kms_id.as_str(), &config).await?;
 
     assert_eq!(secret, res);
 
