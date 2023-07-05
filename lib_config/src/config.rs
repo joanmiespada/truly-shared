@@ -6,7 +6,7 @@ use std::fmt::Display;
 
 use crate::{
     environment::{EnvironmentVariables, DEV_ENV, ENV_VAR_ENVIRONMENT, PROD_ENV, STAGE_ENV},
-    secrets::{Secrets, SECRETS_MANAGER_APP_KEYS, SECRETS_MANAGER_SECRET_KEY},
+    secrets::{Secrets, SECRETS_MANAGER_APP_KEYS},
 };
 
 #[derive(Clone, Debug)]
@@ -144,27 +144,6 @@ impl Config {
                     }
                 }
             }
-            SECRETS_MANAGER_SECRET_KEY => {
-                //check secret key is stored and available, but don't stored in memory!
-                let resp = client
-                    .get_secret_value()
-                    .secret_id(SECRETS_MANAGER_SECRET_KEY)
-                    .send()
-                    .await;
-
-                match resp {
-                    Err(e) => {
-                        panic!(
-                            "secret key for contract owner couldn't find: {}",
-                            e.to_string()
-                        )
-                    }
-                    Ok(scr) => {
-                        debug!("secret key found correctly!");
-                        let _value = scr.secret_string().unwrap();
-                    }
-                }
-            }
             _ => {
                 panic!("secret code {} not found", secret_id)
             }
@@ -173,7 +152,6 @@ impl Config {
 
     pub async fn load_secrets(&mut self) {
         self.load_secret(SECRETS_MANAGER_APP_KEYS).await;
-        self.load_secret(SECRETS_MANAGER_SECRET_KEY).await;
     }
 }
 
