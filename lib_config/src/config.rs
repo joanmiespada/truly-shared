@@ -2,6 +2,7 @@ use aws_config::{meta::region::RegionProviderChain, SdkConfig};
 use aws_types::region::Region;
 use dotenv::dotenv;
 use log::{debug, info};
+//use opentelemetry::sdk::export::trace;
 use std::fmt::Display;
 
 use crate::{
@@ -70,16 +71,19 @@ impl Config {
             None => panic!("error: environment variable not set up!"),
             Some(env_flag) => env_flag,
         };
-        let aws_region_flag = match env.aws_region() {
-            None => panic!("error: aws region variable not set up!"),
-            Some(value) => value,
-        };
-        let aws_endpoint_flag = match env.aws_endpoint() {
-            None => panic!("error: aws endpoint variable not set up!"),
-            Some(value) => value,
-        };
+        
 
         if env_flag == DEV_ENV {
+
+            let aws_region_flag = match env.aws_region() {
+                None => panic!("error: aws region variable not set up!"),
+                Some(value) => value,
+            };
+            let aws_endpoint_flag = match env.aws_endpoint() {
+                None => panic!("error: aws endpoint variable not set up!"),
+                Some(value) => value,
+            };
+
             let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
             let creden = aws_config::profile::ProfileFileCredentialsProvider::builder()
                 .profile_name("localstack");
@@ -90,15 +94,26 @@ impl Config {
                 //.endpoint_resolver(endpoint_resolver.unwrap())
                 .load()
                 .await;
-        } else if env_flag == PROD_ENV {
-            let region_provider = RegionProviderChain::default_provider().or_else("eu-central-1");
-            config = aws_config::from_env().region(region_provider).load().await;
-        } else if env_flag == STAGE_ENV {
-            let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
-            config = aws_config::from_env().region(region_provider).load().await;
-        }else{
+        } else if env_flag == PROD_ENV ||  env_flag == STAGE_ENV{
+            
+            let region_provider;
+            if let Some(aws_region_flag) = env.aws_region() {
+                region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
+            }else{
+                region_provider = RegionProviderChain::default_provider();
+            };
+
+            config = aws_config::from_env().region(region_provider)
+                    .load().await;
+        }
+        // else if env_flag == STAGE_ENV {
+         //   let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
+         //   config = aws_config::from_env().region(region_provider).load().await;
+         //}
+        else{
             panic!("envioronment flag has incorrect value")
         } 
+        info!("region enabled: {}", config.region().unwrap()); 
 
         self.aws_config = Some(config);
     }
