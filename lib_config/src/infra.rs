@@ -11,11 +11,17 @@ use crate::{
 
 const TAG_PROJECT: &str = "Project";
 const TAG_VALUE: &str = "Truly";
+const TAG_ENVIRONMENT: &str = "Environment";
 
 pub async fn create_secret_manager_with_values(
     secrets_json: &str,
-    client: &aws_sdk_secretsmanager::Client,
+    config: &Config
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    
+    let client = aws_sdk_secretsmanager::client::Client::new(config.aws_config());
+
+    let env = config.env_vars().environment().unwrap();
+
     client
         .create_secret()
         .name(SECRETS_MANAGER_APP_KEYS.to_string())
@@ -26,37 +32,25 @@ pub async fn create_secret_manager_with_values(
                 .value(TAG_VALUE.to_owned())
                 .build(),
         )
+        .tags(
+            aws_sdk_secretsmanager::types::Tag::builder()
+                .key(TAG_ENVIRONMENT.to_owned())
+                .value( env )
+                .build(),
+        )
         .send()
         .await?;
 
     Ok(())
 }
 
-// pub async fn create_secret_manager_secret_key(
-//     client: &aws_sdk_secretsmanager::Client,
-// ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-//     let aux = client
-//         .create_secret()
-//         .name(SECRETS_MANAGER_SECRET_KEY.to_string())
-//         .secret_string("--")
-//         .tags(
-//             aws_sdk_secretsmanager::types::Tag::builder()
-//                 .key(TAG_PROJECT.to_owned())
-//                 .value(TAG_VALUE.to_owned())
-//                 .build(),
-//         )
-//         .send()
-//         .await;
-//     match aux {
-//         Err(e) => panic!("{}", e.to_string()),
-//         Ok(_) => Ok(()),
-//     }
-// }
-
 // Only useful for testing, creation keys are manual or scripted.
 pub async fn create_key(
-    client: &aws_sdk_kms::Client,
+    config: &Config
 ) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+
+    let client = aws_sdk_kms::client::Client::new(config.aws_config());
+    let env = config.env_vars().environment().unwrap();
     let resp = client
         .create_key()
         .description("key used to encryp private key for contract owner")
@@ -65,6 +59,12 @@ pub async fn create_key(
             aws_sdk_kms::types::Tag::builder()
                 .tag_key(TAG_PROJECT.to_owned())
                 .tag_value(TAG_VALUE.to_owned())
+                .build(),
+        )
+        .tags(
+            aws_sdk_kms::types::Tag::builder()
+                .tag_key(TAG_ENVIRONMENT.to_owned())
+                .tag_value( env )
                 .build(),
         )
         .send()

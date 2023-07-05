@@ -28,9 +28,9 @@ async fn set_up_secret() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
     config.setup().await;
     config.set_aws_config(&shared_config);
 
-    let keys_client = aws_sdk_kms::client::Client::new(&shared_config);
-    let kms_id = create_key(&keys_client).await?;
-    let secrets_client = aws_sdk_secretsmanager::client::Client::new(&shared_config);
+    //let keys_client = aws_sdk_kms::client::Client::new(&shared_config);
+    let kms_id = create_key(&config).await?;
+    //let secrets_client = aws_sdk_secretsmanager::client::Client::new(&shared_config);
 
     let secrets_json = r#"
     {
@@ -38,7 +38,7 @@ async fn set_up_secret() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
         "JWT_TOKEN_BASE": "localtest_jwt_sd543ERGds235$%^"
     }
     "#;
-    create_secret_manager_with_values(secrets_json, &secrets_client).await?;
+    create_secret_manager_with_values(secrets_json, &config).await?;
     //create_secret_manager_secret_key(&secrets_client).await?;
 
     let secret: &str = "4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d"; // secret key example
