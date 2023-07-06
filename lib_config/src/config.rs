@@ -86,25 +86,31 @@ impl Config {
 
             let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
             let creden = aws_config::profile::ProfileFileCredentialsProvider::builder()
-                .profile_name("localstack");
+                .profile_name("localstack").build();
             config = aws_config::from_env()
-                .credentials_provider(creden.build())
+                .credentials_provider(creden)
                 .region(region_provider)
                 .endpoint_url(aws_endpoint_flag)
-                //.endpoint_resolver(endpoint_resolver.unwrap())
                 .load()
                 .await;
         } else if env_flag == PROD_ENV ||  env_flag == STAGE_ENV{
-            
+
             let region_provider;
             if let Some(aws_region_flag) = env.aws_region() {
-                region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
+                region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag)).or_default_provider();
             }else{
                 region_provider = RegionProviderChain::default_provider();
             };
-
+            let creden;
+            if let Some(aws_profile_flag) = env.aws_profile() {
+                creden = aws_config::profile::ProfileFileCredentialsProvider::builder().profile_name(aws_profile_flag).build();
+            }else{
+                creden = aws_config::profile::ProfileFileCredentialsProvider::builder().build();
+            };
             config = aws_config::from_env().region(region_provider)
-                    .load().await;
+                    .credentials_provider(creden)
+                    .load()
+                    .await;
         }
         // else if env_flag == STAGE_ENV {
          //   let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
