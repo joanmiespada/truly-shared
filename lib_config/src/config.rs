@@ -111,7 +111,7 @@ impl Config {
          //   config = aws_config::from_env().region(region_provider).load().await;
          //}
         else{
-            panic!("envioronment flag has incorrect value")
+            panic!("environment flag has incorrect value")
         } 
         info!("region enabled: {}", config.region().unwrap()); 
 
