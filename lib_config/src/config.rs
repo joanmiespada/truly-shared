@@ -104,20 +104,23 @@ impl Config {
             let creden;
             if let Some(aws_profile_flag) = env.aws_profile() {
                 creden = aws_config::profile::ProfileFileCredentialsProvider::builder().profile_name(aws_profile_flag).build();
-            }else{
-                creden = aws_config::profile::ProfileFileCredentialsProvider::builder().build();
-            };
-            config = aws_config::from_env().region(region_provider)
+                config = aws_config::from_env().region(region_provider)
                     .credentials_provider(creden)
                     .load()
                     .await;
+            }else{
+                config = aws_config::from_env().region(region_provider)
+                    .load()
+                    .await;
+            };
+            
         }
         // else if env_flag == STAGE_ENV {
          //   let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
          //   config = aws_config::from_env().region(region_provider).load().await;
          //}
         else{
-            panic!("environment flag has incorrect value")
+            panic!("environment flag has incorrect value. Current environtment value: {}", env_flag)
         } 
         info!("region enabled: {}", config.region().unwrap()); 
 
