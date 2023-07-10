@@ -42,6 +42,8 @@ pub struct EnvironmentVariables {
 
     telemetry: Option<bool>,
     telemetry_endpoint: Option<Url>,
+
+    api_stage: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -69,6 +71,7 @@ impl EnvironmentVariables {
             video_result_topic: None,
             telemetry: None,
             telemetry_endpoint: None,
+            api_stage: None,
         }
     }
     pub fn rust_log(&self) -> Option<String> {
@@ -219,6 +222,12 @@ impl EnvironmentVariables {
     }
     pub fn set_telemetry_endpoint(&mut self, value: Url) {
         self.telemetry_endpoint = Some(value);
+    }
+    pub fn set_api_stage(&mut self, value: String) {
+        self.api_stage = Some(value);
+    }
+    pub fn api_stage(&self)-> Option<String> {
+        self.api_stage.clone()
     }
 }
 
