@@ -3,7 +3,7 @@ use lib_config::{
     infra::{
         build_local_stack_connection, create_key, create_secret_manager_with_values,
         uncypher_with_secret_key, cypher_with_secret_key,
-    }, environment::DEV_ENV, environment::ENV_VAR_ENVIRONMENT
+    }, environment::DEV_ENV, environment::ENV_VAR_ENVIRONMENT, stage::remove_stage_prefix
 };
 use std::env;
 use testcontainers::*;
@@ -49,4 +49,28 @@ async fn set_up_secret() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
     assert_eq!(secret, res);
 
     Ok(())
+}
+
+#[tokio::test]
+async fn test_remove_api_prefix() {
+
+    let pattern = "v1".to_string();
+
+    let value= "/v1/v1/abc/cvf".to_string();
+    let aux = remove_stage_prefix(value, pattern.clone());
+    assert_eq!(aux,"/abc/cvf");
+
+    let value= "/abc/cvf".to_string();
+    let aux = remove_stage_prefix(value, pattern.clone());
+    assert_eq!(aux,"/abc/cvf");
+
+    let value= "/v1/abc/cvf".to_string();
+    let aux = remove_stage_prefix(value, pattern.clone());
+    assert_eq!(aux,"/abc/cvf");
+
+    let value= "/v1/v1/v1/abc/cvf".to_string();
+    let aux = remove_stage_prefix(value, pattern.clone());
+    assert_eq!(aux,"/abc/cvf");
+
+
 }
