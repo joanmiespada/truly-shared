@@ -6,3 +6,4 @@ pub mod schema;
 pub mod result;
 pub mod telemetry;
 pub mod stage;
+pub mod timing;
