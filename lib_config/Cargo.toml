@@ -12,32 +12,32 @@ name="integration"
 path="tests/lib.rs"
 
 [dependencies]
-aws-sdk-dynamodb = "0.28.0"
-aws-config = "0.55.3"
+aws-sdk-dynamodb = "0.30.0"
+aws-config = "0.56.1"
 env_logger = "0.10.0"
 dotenv = "0.15.0"
 envy = "0.4.2"
-serde = { version = "1.0.173", features = ["derive"] }
-serde_json = "1.0.103"
-aws-sdk-secretsmanager = "0.28.0"
-log = "0.4.19"
-aws-types = "0.55.3"
-aws-sdk-kms = "0.28.0"
+serde = { version = "1.0.186", features = ["derive"] }
+serde_json = "1.0.105"
+aws-sdk-secretsmanager = "0.30.0"
+log = "0.4.20"
+aws-types = "0.56.1"
+aws-sdk-kms = "0.30.0"
 base64 = "0.21.2"
-async-trait = "0.1.71"
-opentelemetry = { version = "0.19.0", default-features = false, features = ["trace", "rt-tokio"] }
-opentelemetry-otlp = "0.12.0"
-opentelemetry-semantic-conventions = "0.11.0"
-tracing-bunyan-formatter = "0.3.8"
-tracing-opentelemetry = "0.19.0"
+async-trait = "0.1.73"
+opentelemetry = { version = "0.20.0", default-features = false, features = ["trace", "rt-tokio"] }
+opentelemetry-otlp = "0.13.0"
+opentelemetry-semantic-conventions = "0.12.0"
+tracing-bunyan-formatter = "0.3.9"
+tracing-opentelemetry = "0.20.0"
 tracing-subscriber = { version = "0.3.17", features = ["env-filter"] }
 url = {version="2.4.0", features = ["serde"]}
 chrono = {version="0.4.26", features = ["serde"] }
 
 [dev-dependencies]
 env_logger = "0.10.0"
-aws-types = "0.55.3"
+aws-types = "0.56.1"
 spectral = "0.6.0"
 #testcontainers = "0.14.0"
 testcontainers = { git="https://github.com/joanmiespada/testcontainers-rs", branch="localstack2"  }
-tokio = { version="1.29.1", features=["full"]}
+tokio = { version="1.32.0", features=["full"]}
