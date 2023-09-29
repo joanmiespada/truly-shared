@@ -10,15 +10,15 @@ crate-type=["lib"]
 
 [dependencies]
 lib_config = { path = "../lib_config" }
-serde = { version = "1.0.186", features = ["derive"] }
-serde_json = "1.0.105"
+serde = { version = "1.0.188", features = ["derive"] }
+serde_json = "1.0.107"
 tracing = { version = "0.1", features = ["log"] }
 tracing-subscriber = { version = "0.3.17", default-features = false, features = ["fmt", "env-filter"] }
 validator = { version = "0.16", features = ["derive"] }
-url = {version="2.4.0", features=["serde"] }
+url = {version="2.4.1", features=["serde"] }
 uuid = { version = "1.4.1", features = ["v4","fast-rng",  "macro-diagnostics",  "serde"]}
-aws-sdk-sqs = "0.30.0"
-aws-sdk-sns = "0.30.0"
+aws-sdk-sqs = "0.31.1"
+aws-sdk-sns = "0.31.1"
 env_logger = "0.10.0"
 
 [dev-dependencies]
