@@ -32,6 +32,7 @@ pub struct EnvironmentVariables {
     shorter_video_in_topic: Option<String>,
     shorter_video_out_topic: Option<String>,
     hashes_similar_video_in_topic: Option<String>,
+    matchapi_endpoint: Option<Url>,
 
     minting_fails_topic: Option<String>,
 
@@ -65,6 +66,7 @@ impl EnvironmentVariables {
             shorter_video_in_topic: None,
             shorter_video_out_topic: None,
             hashes_similar_video_in_topic: None,
+            matchapi_endpoint: None,
             minting_fails_topic: None,
             bucket_video_temp: None,
             bucket_video_permanent: None,
@@ -165,6 +167,13 @@ impl EnvironmentVariables {
     }
     pub fn set_topic_arn_hashes_similars_start(&mut self, value: String) {
         self.hashes_similar_video_in_topic = Some(value.clone());
+    }
+
+    pub fn matchapi_endpoint(&self) -> Option<Url>{
+        self.matchapi_endpoint.clone()
+    }
+    pub fn set_matchapi_endpoint(&mut self, value:Url) {
+        self.matchapi_endpoint = Some(value)
     }
 
     pub fn topic_arn_shorter_video_result(&self) -> Option<String> {
