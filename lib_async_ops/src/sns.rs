@@ -60,7 +60,7 @@ pub async fn send(
         .into()),
         Ok(rsp) => {
             let result = format!(
-                "scheduled async miting for id {:?} successfully.",
+                "scheduled async op for id {:?} successfully.",
                 rsp.message_id().unwrap()
             );
             Ok(result)
