@@ -7,3 +7,5 @@ pub mod result;
 pub mod telemetry;
 pub mod stage;
 pub mod timing;
+pub mod logs;
+pub mod traces;

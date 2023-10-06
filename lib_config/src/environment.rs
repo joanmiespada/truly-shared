@@ -45,7 +45,7 @@ pub struct EnvironmentVariables {
     telemetry_endpoint: Option<Url>,
 
     api_stage: Option<String>,
-    app_log: Option<String>,
+    trace_level: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -75,7 +75,7 @@ impl EnvironmentVariables {
             telemetry: None,
             telemetry_endpoint: None,
             api_stage: None,
-            app_log: None,
+            trace_level: None,
         }
     }
     pub fn rust_log(&self) -> Option<String> {
@@ -236,11 +236,11 @@ impl EnvironmentVariables {
         self.api_stage.clone()
     }
 
-    pub fn app_log(&self) -> Option<String> {
-        self.app_log.clone()
+    pub fn trace_level(&self) -> Option<String> {
+        self.trace_level.clone()
     }
-    pub fn set_app_log(&mut self, value: String) {
-        self.app_log = Some(value);
+    pub fn set_trace_level(&mut self, value: String) {
+        self.trace_level = Some(value);
     }
 }
 
