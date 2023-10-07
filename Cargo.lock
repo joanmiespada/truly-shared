@@ -162,9 +162,9 @@ dependencies = [
 
 [[package]]
 name = "aws-sdk-dynamodb"
-version = "0.32.0"
+version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37779120020190d09d90682a65618ce0ecfa942944334fec62d6097870835d92"
+checksum = "c6c39120bb76fe32e13d4c0e9be67f3732f80ee63faee2c74ebf9ade4705b106"
 dependencies = [
  "aws-credential-types",
  "aws-http",
@@ -187,9 +187,9 @@ dependencies = [
 
 [[package]]
 name = "aws-sdk-kms"
-version = "0.32.0"
+version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "66c57e06dbdb216b03ff6045a2b19eef081d1bc1cbffe5bd684d2333d0ac22ae"
+checksum = "18fc2429ded0e8249b0ea514e519fbe684b46bb45cc35f596f19d7166c94b9c6"
 dependencies = [
  "aws-credential-types",
  "aws-http",
@@ -211,9 +211,9 @@ dependencies = [
 
 [[package]]
 name = "aws-sdk-secretsmanager"
-version = "0.32.0"
+version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f8a22b8700660fbca67c4d6cd8fc585bf4b837319fe1c0ec81b5d2355c01143"
+checksum = "dca30a49664c4dc8e1acbae5c3985f2674fdadca5cf98d1110aa251aa3933030"
 dependencies = [
  "aws-credential-types",
  "aws-http",
@@ -236,9 +236,9 @@ dependencies = [
 
 [[package]]
 name = "aws-sdk-sns"
-version = "0.32.0"
+version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67517d20a1852e82e3a55218159457f17396d93e30405272e4bb0f8d5db2f273"
+checksum = "fa7bdff24e35a0dae783d670a580ad7ab6854fb7e68c38ae44a086b1b473b448"
 dependencies = [
  "aws-credential-types",
  "aws-http",
@@ -261,9 +261,9 @@ dependencies = [
 
 [[package]]
 name = "aws-sdk-sqs"
-version = "0.32.0"
+version = "0.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06cbe04cc2b7c5f05d6149ae6c4ca5d7e63f40710b7a7c9bd9c36026c6e09759"
+checksum = "f927fc31f98f630a00b1e5dcdb28c4322864478be2e93f2bd1754a1c7c0d2b14"
 dependencies = [
  "aws-credential-types",
  "aws-http",
@@ -1249,7 +1249,7 @@ dependencies = [
 
 [[package]]
 name = "lib_config"
-version = "0.0.21"
+version = "0.0.22"
 dependencies = [
  "async-trait",
  "aws-config",
@@ -1296,9 +1296,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.148"
+version = "0.2.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9cdc71e17332e86d2e1d38c1f99edcb6288ee11b815fb1a4b049eaa2114d369b"
+checksum = "a08173bc88b7955d1b3145aa561539096c421ac8debde8cbc3612ec635fee29b"
 
 [[package]]
 name = "linux-raw-sys"

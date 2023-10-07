@@ -46,6 +46,8 @@ pub struct EnvironmentVariables {
 
     api_stage: Option<String>,
     trace_level: Option<String>,
+    
+    url_base_permanent_images: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -76,6 +78,7 @@ impl EnvironmentVariables {
             telemetry_endpoint: None,
             api_stage: None,
             trace_level: None,
+            url_base_permanent_images: None
         }
     }
     pub fn rust_log(&self) -> Option<String> {
@@ -242,6 +245,14 @@ impl EnvironmentVariables {
     pub fn set_trace_level(&mut self, value: String) {
         self.trace_level = Some(value);
     }
+
+    pub fn url_base_permanent_images(&self) -> Option<String> {
+        self.url_base_permanent_images.clone()
+    }
+    pub fn set_url_base_permanent_images(&mut self, value: String) {
+        self.url_base_permanent_images = Some(value);
+    }
+
 }
 
 impl Display for EnvironmentVariables {
