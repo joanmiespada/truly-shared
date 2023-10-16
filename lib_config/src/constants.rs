@@ -1,6 +1,9 @@
 
 pub const VALUE_PROJECT: &str = "truly";
-pub const VALUE_SERVICE: &str = "api";
+
+pub const API_DOMAIN: &str = "api";
+pub const MATCHAPI_DOMAIN: &str = "matchapi";
+//add other domains here
 
 
 pub const TAG_PROJECT: &str = "Project";

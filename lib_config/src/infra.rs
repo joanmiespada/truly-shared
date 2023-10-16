@@ -7,7 +7,7 @@ use base64::{engine::general_purpose, Engine as _};
 use crate::{
     config::Config,
     secrets::SECRETS_MANAGER_APP_KEYS,
-    constants::{TAG_PROJECT,VALUE_PROJECT, TAG_ENVIRONMENT,TAG_SERVICE, VALUE_SERVICE}
+    constants::{TAG_PROJECT,VALUE_PROJECT, TAG_ENVIRONMENT,TAG_SERVICE, API_DOMAIN}
 };
 
 
@@ -33,7 +33,7 @@ pub async fn create_secret_manager_with_values(
         .tags(
             aws_sdk_secretsmanager::types::Tag::builder()
                 .key(TAG_SERVICE.to_owned())
-                .value(VALUE_SERVICE.to_owned())
+                .value(API_DOMAIN.to_owned())
                 .build(),
         )
         .tags(
@@ -68,7 +68,7 @@ pub async fn create_key(
         .tags(
             aws_sdk_kms::types::Tag::builder()
                 .tag_key(TAG_SERVICE.to_owned())
-                .tag_value(VALUE_SERVICE.to_owned())
+                .tag_value(API_DOMAIN.to_owned())
                 .build(),
         )
         .tags(
