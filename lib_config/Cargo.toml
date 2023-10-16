@@ -1,6 +1,6 @@
 [package]
 name="lib_config"
-version="0.0.26"
+version="0.0.27"
 edition = "2021"
 
 [lib]
@@ -34,10 +34,10 @@ tracing-opentelemetry = "0.21.0"
 tracing-subscriber = { version = "0.3.17", features = ["fmt","env-filter"] }
 url = {version="2.4.1", features = ["serde"]}
 chrono = {version="0.4.31", features = ["serde"] }
+tokio = { version="1.33.0", features=["full"]}
 
 [dev-dependencies]
 aws-types = "0.56.1"
 spectral = "0.6.0"
 #testcontainers = "0.14.0"
 testcontainers = { git="https://github.com/joanmiespada/testcontainers-rs", branch="localstack2"  }
-tokio = { version="1.33.0", features=["full"]}
