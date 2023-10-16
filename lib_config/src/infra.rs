@@ -6,12 +6,10 @@ use base64::{engine::general_purpose, Engine as _};
 
 use crate::{
     config::Config,
-    secrets::{SECRETS_MANAGER_APP_KEYS},
+    secrets::SECRETS_MANAGER_APP_KEYS,
+    constants::{TAG_PROJECT,VALUE_PROJECT, TAG_ENVIRONMENT,TAG_SERVICE, VALUE_SERVICE}
 };
 
-const TAG_PROJECT: &str = "Project";
-const TAG_VALUE: &str = "Truly";
-const TAG_ENVIRONMENT: &str = "Environment";
 
 pub async fn create_secret_manager_with_values(
     secrets_json: &str,
@@ -29,7 +27,13 @@ pub async fn create_secret_manager_with_values(
         .tags(
             aws_sdk_secretsmanager::types::Tag::builder()
                 .key(TAG_PROJECT.to_owned())
-                .value(TAG_VALUE.to_owned())
+                .value(VALUE_PROJECT.to_owned())
+                .build(),
+        )
+        .tags(
+            aws_sdk_secretsmanager::types::Tag::builder()
+                .key(TAG_SERVICE.to_owned())
+                .value(VALUE_SERVICE.to_owned())
                 .build(),
         )
         .tags(
@@ -58,7 +62,13 @@ pub async fn create_key(
         .tags(
             aws_sdk_kms::types::Tag::builder()
                 .tag_key(TAG_PROJECT.to_owned())
-                .tag_value(TAG_VALUE.to_owned())
+                .tag_value(VALUE_PROJECT.to_owned())
+                .build(),
+        )
+        .tags(
+            aws_sdk_kms::types::Tag::builder()
+                .tag_key(TAG_SERVICE.to_owned())
+                .tag_value(VALUE_SERVICE.to_owned())
                 .build(),
         )
         .tags(
