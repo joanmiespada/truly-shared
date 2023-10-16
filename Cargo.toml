@@ -4,7 +4,8 @@ resolver = "2"
 members = [
     "lib_config",
     "lib_async_ops",
-    "lib_video_objs"
+    "lib_video_objs",
+    "lib_hash_objs"
 ]
 
 

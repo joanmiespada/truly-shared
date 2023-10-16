@@ -1271,6 +1271,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "lib_hash_objs"
+version = "0.0.1"
+dependencies = [
+ "async-trait",
+ "base64",
+ "dotenv",
+ "env_logger",
+ "envy",
+ "log",
+ "serde",
+ "serde_json",
+ "url",
+ "uuid",
+]
+
+[[package]]
 name = "lib_video_objs"
 version = "0.0.1"
 dependencies = [
