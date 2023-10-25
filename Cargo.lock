@@ -1273,7 +1273,7 @@ dependencies = [
 
 [[package]]
 name = "lib_hash_objs"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "async-trait",
  "base64",
