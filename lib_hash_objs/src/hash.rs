@@ -9,6 +9,7 @@ use uuid::Uuid;
 pub struct HashResult {
     pub asset_id: Uuid,
     #[serde(rename = "type")]  
-    pub ttype: String
+    pub ttype: String,
+    pub result: String,
 }
 
