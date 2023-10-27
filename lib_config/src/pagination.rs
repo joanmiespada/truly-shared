@@ -79,6 +79,12 @@ pub fn pagination_decode_token<T: DeserializeOwned >(env_vars: &EnvironmentVaria
 #[derive(Debug)]
 pub struct AttributeValueWrapper(AttributeValue);
 
+impl AttributeValueWrapper {
+    pub fn into_inner(self) -> AttributeValue {
+        self.0
+    }
+}
+
 impl<'de> Deserialize<'de> for AttributeValueWrapper {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
