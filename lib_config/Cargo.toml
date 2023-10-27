@@ -1,6 +1,6 @@
 [package]
 name="lib_config"
-version="0.0.29"
+version="0.0.30"
 edition = "2021"
 
 [lib]
@@ -36,6 +36,7 @@ url = {version="2.4.1", features = ["serde"]}
 chrono = {version="0.4.31", features = ["serde"] }
 tokio = { version="1.33.0", features=["full"]}
 lazy_static = "1.4.0"
+
 
 [dev-dependencies]
 aws-types = "0.56.1"
