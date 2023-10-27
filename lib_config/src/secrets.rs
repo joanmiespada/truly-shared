@@ -14,6 +14,8 @@ pub struct ApiSecrets {
     pub hmac_secret: String,
     #[serde(rename = "JWT_TOKEN_BASE")]
     pub jwt_token_base: String,
+    #[serde(rename = "PAGINATION_TOKEN")]
+    pub pagination_token: String,
 }
 
 #[derive(Deserialize, Debug)]

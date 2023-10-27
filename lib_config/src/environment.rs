@@ -52,6 +52,8 @@ pub struct EnvironmentVariables {
     smtp_host: Option<String>,
     smtp_user: Option<String>,
     smtp_passw: Option<String>,
+
+    pagination_token_encoder: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -86,6 +88,7 @@ impl EnvironmentVariables {
             smtp_host: None,
             smtp_passw: None,
             smtp_user: None,
+            pagination_token_encoder: None,
         }
     }
     pub fn rust_log(&self) -> Option<String> {
@@ -282,6 +285,14 @@ impl EnvironmentVariables {
 
     pub fn set_smtp_passw(&mut self, value: String) {
         self.smtp_passw = Some(value);
+    }
+
+    pub fn pagination_token_encoder(&self) -> Option<String> {
+        self.pagination_token_encoder.clone()
+    }
+
+    pub fn set_pagination_token_encoder(&mut self, value: String) {
+        self.pagination_token_encoder = Some(value);
     }
 
 }

@@ -3,8 +3,9 @@ use lib_config::{
     infra::{
         build_local_stack_connection, create_key, create_secret_manager_with_values,
         uncypher_with_secret_key, cypher_with_secret_key,
-    }, environment::DEV_ENV, environment::ENV_VAR_ENVIRONMENT, stage::remove_stage_prefix
+    }, environment::DEV_ENV, environment::ENV_VAR_ENVIRONMENT, stage::remove_stage_prefix, pagination::{pagination_encode_token, pagination_decode_token, PAGINATION_TOKEN_ENCODER}
 };
+use maplit::hashmap;
 use std::env;
 use testcontainers::*;
 
@@ -35,7 +36,8 @@ async fn set_up_secret() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
     let secrets_json = r#"
     {
         "HMAC_SECRET" : "localtest_hmac_1234RGsdfg#$%",
-        "JWT_TOKEN_BASE": "localtest_jwt_sd543ERGds235$%^"
+        "JWT_TOKEN_BASE": "localtest_jwt_sd543ERGds235$%^",
+        "PAGINATION_TOKEN": "localtest_pag_1234RGsdfg#$%"
     }
     "#;
     create_secret_manager_with_values(secrets_json, &config).await?;
@@ -74,3 +76,32 @@ async fn test_remove_api_prefix() {
 
 
 }
+
+#[tokio::test]
+async fn test_serialize_deserialize_pagination_token() {
+
+    env::set_var("RUST_LOG", "debug");
+    env::set_var(ENV_VAR_ENVIRONMENT, DEV_ENV);
+    env::set_var(PAGINATION_TOKEN_ENCODER, "abcdfg");
+
+
+    let aux = hashmap!{
+        "name".to_string() => "pepe".to_string(), //Value::from_str("pepe").unwrap(),
+        "surname".to_string() => "joseph".to_string() //Value::from_str("joseph").unwrap()
+    };
+    let aux_clone = aux.clone();
+
+    let mut config = Config::new();
+    config.setup().await;
+
+    let res = pagination_encode_token(&config, Some(aux));
+
+    let res2 = pagination_decode_token(&config, res).unwrap().unwrap();
+
+    assert_eq!(res2["name"], aux_clone["name"]);
+    assert_eq!(res2["surname"], aux_clone["surname"]);
+
+
+}
+
+ 

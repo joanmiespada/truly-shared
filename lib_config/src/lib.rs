@@ -11,6 +11,7 @@ pub mod logs;
 pub mod traces;
 pub mod constants;
 pub mod date_times;
+pub mod pagination;
 
 #[macro_use]
 extern crate lazy_static;
