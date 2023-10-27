@@ -50,6 +50,8 @@ pub struct EnvironmentVariables {
     url_base_permanent_images: Option<String>,
 
     smtp_host: Option<String>,
+    smtp_user: Option<String>,
+    smtp_passw: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -82,6 +84,8 @@ impl EnvironmentVariables {
             trace_level: None,
             url_base_permanent_images: None,
             smtp_host: None,
+            smtp_passw: None,
+            smtp_user: None,
         }
     }
     pub fn rust_log(&self) -> Option<String> {
@@ -262,6 +266,22 @@ impl EnvironmentVariables {
 
     pub fn set_smtp_host(&mut self, value: String) {
         self.smtp_host = Some(value);
+    }
+
+    pub fn smtp_user(&self) -> Option<String> {
+        self.smtp_user.clone()
+    }
+
+    pub fn set_smtp_user(&mut self, value: String) {
+        self.smtp_user = Some(value);
+    }
+
+    pub fn smtp_passw(&self) -> Option<String> {
+        self.smtp_passw.clone()
+    }
+
+    pub fn set_smtp_passw(&mut self, value: String) {
+        self.smtp_passw = Some(value);
     }
 
 }

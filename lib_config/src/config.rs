@@ -7,7 +7,7 @@ use std::fmt::Display;
 
 use crate::{
     environment::{EnvironmentVariables, DEV_ENV, ENV_VAR_ENVIRONMENT, PROD_ENV, STAGE_ENV},
-    secrets::{Secrets, SECRETS_MANAGER_APP_KEYS},
+    secrets::{get_secret, ApiSecrets, SMTPSecret, SECRETS_MANAGER_APP_KEYS, SECRETS_MANAGER_SMTP},
 };
 
 #[derive(Clone, Debug)]
@@ -71,10 +71,8 @@ impl Config {
             None => panic!("error: environment variable not set up!"),
             Some(env_flag) => env_flag,
         };
-        
 
         if env_flag == DEV_ENV {
-
             let aws_region_flag = match env.aws_region() {
                 None => panic!("error: aws region variable not set up!"),
                 Some(value) => value,
@@ -86,43 +84,47 @@ impl Config {
 
             let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
             let creden = aws_config::profile::ProfileFileCredentialsProvider::builder()
-                .profile_name("localstack").build();
+                .profile_name("localstack")
+                .build();
             config = aws_config::from_env()
                 .credentials_provider(creden)
                 .region(region_provider)
                 .endpoint_url(aws_endpoint_flag)
                 .load()
                 .await;
-        } else if env_flag == PROD_ENV ||  env_flag == STAGE_ENV{
-
+        } else if env_flag == PROD_ENV || env_flag == STAGE_ENV {
             let region_provider;
             if let Some(aws_region_flag) = env.aws_region() {
-                region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag)).or_default_provider();
-            }else{
+                region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag))
+                    .or_default_provider();
+            } else {
                 region_provider = RegionProviderChain::default_provider();
             };
             let creden;
             if let Some(aws_profile_flag) = env.aws_profile() {
-                creden = aws_config::profile::ProfileFileCredentialsProvider::builder().profile_name(aws_profile_flag).build();
-                config = aws_config::from_env().region(region_provider)
+                creden = aws_config::profile::ProfileFileCredentialsProvider::builder()
+                    .profile_name(aws_profile_flag)
+                    .build();
+                config = aws_config::from_env()
+                    .region(region_provider)
                     .credentials_provider(creden)
                     .load()
                     .await;
-            }else{
-                config = aws_config::from_env().region(region_provider)
-                    .load()
-                    .await;
+            } else {
+                config = aws_config::from_env().region(region_provider).load().await;
             };
-            
         }
         // else if env_flag == STAGE_ENV {
-         //   let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
-         //   config = aws_config::from_env().region(region_provider).load().await;
-         //}
-        else{
-            panic!("environment flag has incorrect value. Current environtment value: {}", env_flag)
-        } 
-        info!("region enabled: {}", config.region().unwrap()); 
+        //   let region_provider = RegionProviderChain::first_try(Region::new(aws_region_flag));
+        //   config = aws_config::from_env().region(region_provider).load().await;
+        //}
+        else {
+            panic!(
+                "environment flag has incorrect value. Current environtment value: {}",
+                env_flag
+            )
+        }
+        info!("region enabled: {}", config.region().unwrap());
 
         self.aws_config = Some(config);
     }
@@ -142,40 +144,40 @@ impl Config {
         self.env_variables = Some(new_data.clone())
     }
 
-    pub async fn load_secret(&mut self, secret_id: &str) {
-        let client = aws_sdk_secretsmanager::Client::new(self.aws_config());
-        match secret_id {
-            SECRETS_MANAGER_APP_KEYS => {
-                let resp = client
-                    .get_secret_value()
-                    .secret_id(SECRETS_MANAGER_APP_KEYS)
-                    .send()
-                    .await;
-
-                match resp {
-                    Err(e) => {
-                        panic!("secrets couldn't find: {}", e.to_string())
-                    }
-                    Ok(scr) => {
-                        let value = scr.secret_string().unwrap();
-                        let m_env = self.env_variables.as_mut().unwrap();
-                        let secrets: Secrets = serde_json::from_str(value).unwrap(); //_or( panic!("secrets malformed") );
-                        m_env.set_hmac_secret(secrets.hmac_secret);
-                        m_env.set_jwt_token_base(secrets.jwt_token_base);
-                        //m_env.set_blockchain_gateway_api_key(secrets.blockchain_gateway_api_key);
-
-                        debug!("app secretes found correctly")
-                    }
+    pub async fn load_secret(&mut self, secret_id: String) {
+        if secret_id == SECRETS_MANAGER_APP_KEYS.clone() {
+            let op = get_secret::<ApiSecrets>(self, &secret_id).await;
+            match op {
+                Ok(secrets) => {
+                    let m_env = self.env_variables.as_mut().unwrap();
+                    m_env.set_hmac_secret(secrets.hmac_secret);
+                    m_env.set_jwt_token_base(secrets.jwt_token_base);
+                    debug!("api secretes found correctly")
+                }
+                Err(e) => {
+                    panic!("secrets {} couldn't find: {}", secret_id , e.to_string())
                 }
             }
-            _ => {
-                panic!("secret code {} not found", secret_id)
+        }
+        if secret_id == SECRETS_MANAGER_SMTP.clone() {
+            let op = get_secret::<SMTPSecret>(self, &secret_id).await;
+            match op {
+                Ok(secrets) => {
+                    let m_env = self.env_variables.as_mut().unwrap();
+                    m_env.set_smtp_user(secrets.user);
+                    m_env.set_smtp_passw(secrets.pass);
+                    debug!("api secretes found correctly")
+                }
+                Err(e) => {
+                    panic!("secrets {} couldn't find: {}", secret_id , e.to_string())
+                }
             }
         }
     }
 
     pub async fn load_secrets(&mut self) {
-        self.load_secret(SECRETS_MANAGER_APP_KEYS).await;
+        self.load_secret(SECRETS_MANAGER_APP_KEYS.to_string()).await;
+        self.load_secret(SECRETS_MANAGER_SMTP.to_string()).await;
     }
 }
 

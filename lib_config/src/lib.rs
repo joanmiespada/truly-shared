@@ -10,3 +10,7 @@ pub mod timing;
 pub mod logs;
 pub mod traces;
 pub mod constants;
+
+
+#[macro_use]
+extern crate lazy_static;
