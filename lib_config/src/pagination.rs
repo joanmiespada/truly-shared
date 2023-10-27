@@ -2,21 +2,21 @@ use std::collections::HashMap;
 use std::option::Option;
 use maplit::hashmap;
 use serde_json::{Value, Map};
+use serde::{Serialize, de::DeserializeOwned};
 use sha2::{Sha256, Digest};
 use base64::{engine::general_purpose, Engine as _};
-
-use crate::config::Config;
+use crate::environment::EnvironmentVariables;
 
 pub const PAGINATION_TOKEN_ENCODER: &str = "PAGINATION_TOKEN_ENCODER";
-
-pub fn pagination_encode_token( config: &Config, data: Option<HashMap<String, String>>) -> Option<String> {
+//aws_sdk_dynamodb::types::AttributeValue
+pub fn pagination_encode_token<T: Serialize>( env_vars: &EnvironmentVariables, data: Option<HashMap<String,T>>) -> Option<String> {
     match data {
         Some(d) if d.is_empty() => None,
         Some(d) => {
             // Convert data to JSON
             let data_str = serde_json::to_string(&d).expect("Failed to serialize data");
             // Create a hash checksum of the data
-            let h_1= config.env_vars().pagination_token_encoder().expect("PAGINATION_TOKEN_ENCODER not set in environment");
+            let h_1= env_vars.pagination_token_encoder().expect("PAGINATION_TOKEN_ENCODER not set in environment");
             // let h_1 = env::var(PAGINATION_TOKEN_ENCODER).expect("PAGINATION_TOKEN_ENCODER not set in environment");
             let mut hasher = Sha256::new();
             hasher.update(format!("{}{}", data_str, h_1));
@@ -36,7 +36,7 @@ pub fn pagination_encode_token( config: &Config, data: Option<HashMap<String, St
     }
 }
 
-pub fn pagination_decode_token(config: &Config,token: Option<String>) -> Result<Option<HashMap<String, String>>, &'static str> {
+pub fn pagination_decode_token<T: DeserializeOwned >(env_vars: &EnvironmentVariables, token: Option<String>) -> Result<Option<HashMap<String, T>>, &'static str> {
     match token {
         Some(t) if t.is_empty() => Ok(None),
         Some(t) => {
@@ -57,7 +57,7 @@ pub fn pagination_decode_token(config: &Config,token: Option<String>) -> Result<
             //let data_str = serde_json::to_string(data).map_err(|_| "Failed to serialize data")?;
             
             //let h_1 = env::var(PAGINATION_TOKEN_ENCODER).map_err(|_| "PAGINATION_TOKEN_ENCODER not set in environment")?;
-            let h_1= config.env_vars().pagination_token_encoder().expect("PAGINATION_TOKEN_ENCODER not set in environment");
+            let h_1= env_vars.pagination_token_encoder().expect("PAGINATION_TOKEN_ENCODER not set in environment");
             let mut hasher = Sha256::new();
             hasher.update(format!("{}{}", data_str, h_1));
             let expected_checksum = format!("{:x}", hasher.finalize());
