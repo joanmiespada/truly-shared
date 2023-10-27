@@ -2,11 +2,12 @@ use std::collections::HashMap;
 use std::option::Option;
 use maplit::hashmap;
 use serde_json::{Value, Map};
-use serde::{Serialize, de::DeserializeOwned};
+use serde::de::DeserializeOwned;
 use sha2::{Sha256, Digest};
 use base64::{engine::general_purpose, Engine as _};
 use crate::environment::EnvironmentVariables;
 use serde::{Deserialize, Deserializer};
+use serde::ser::{Serialize, Serializer};
 use aws_sdk_dynamodb::types::AttributeValue;
 
 pub const PAGINATION_TOKEN_ENCODER: &str = "PAGINATION_TOKEN_ENCODER";
@@ -92,5 +93,18 @@ impl<'de> Deserialize<'de> for AttributeValueWrapper {
     {
         let s: String = Deserialize::deserialize(deserializer)?;
         Ok(AttributeValueWrapper(AttributeValue::S(s)))
+    }
+}
+
+impl<'se> Serialize for AttributeValueWrapper {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer + serde::ser::Serializer,
+    {
+        match &self.0 {
+            AttributeValue::S(s) => s.serialize(serializer),
+            // If there are other variants you can handle them similarly
+            _ => Err(serde::ser::Error::custom("Unsupported AttributeValue type in AttributeValueWrapper")),
+        }
     }
 }
