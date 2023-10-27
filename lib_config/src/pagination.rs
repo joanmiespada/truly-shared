@@ -6,6 +6,8 @@ use serde::{Serialize, de::DeserializeOwned};
 use sha2::{Sha256, Digest};
 use base64::{engine::general_purpose, Engine as _};
 use crate::environment::EnvironmentVariables;
+use serde::{Deserialize, Deserializer};
+use aws_sdk_dynamodb::types::AttributeValue;
 
 pub const PAGINATION_TOKEN_ENCODER: &str = "PAGINATION_TOKEN_ENCODER";
 //aws_sdk_dynamodb::types::AttributeValue
@@ -69,5 +71,20 @@ pub fn pagination_decode_token<T: DeserializeOwned >(env_vars: &EnvironmentVaria
             Ok(Some(serde_json::from_str(data_str.clone()).map_err(|_| "Failed to deserialize data into HashMap")?))
         },
         None => Ok(None)
+    }
+}
+
+
+
+#[derive(Debug)]
+pub struct AttributeValueWrapper(AttributeValue);
+
+impl<'de> Deserialize<'de> for AttributeValueWrapper {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: String = Deserialize::deserialize(deserializer)?;
+        Ok(AttributeValueWrapper(AttributeValue::S(s)))
     }
 }
