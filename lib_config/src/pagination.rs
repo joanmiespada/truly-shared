@@ -78,11 +78,16 @@ pub fn pagination_decode_token<T: DeserializeOwned >(env_vars: &EnvironmentVaria
 
 
 #[derive(Debug)]
-pub struct AttributeValueWrapper(AttributeValue);
+pub struct AttributeValueWrapper{
+    att: AttributeValue
+}
 
 impl AttributeValueWrapper {
-    pub fn into_inner(self) -> AttributeValue {
-        self.0
+    pub fn get(self) -> AttributeValue {
+        self.att
+    }
+    pub fn set(mut self, value: &AttributeValue ) {
+        self.att = value.clone();
     }
 }
 
@@ -92,19 +97,31 @@ impl<'de> Deserialize<'de> for AttributeValueWrapper {
         D: Deserializer<'de>,
     {
         let s: String = Deserialize::deserialize(deserializer)?;
-        Ok(AttributeValueWrapper(AttributeValue::S(s)))
+        Ok(AttributeValueWrapper { att: AttributeValue::S(s) })
     }
 }
 
-impl<'se> Serialize for AttributeValueWrapper {
+impl Serialize for AttributeValueWrapper {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer + serde::ser::Serializer,
     {
-        match &self.0 {
-            AttributeValue::S(s) => s.serialize(serializer),
+        match &self.att {
+            //AttributeValue::S(s) => s.serialize(serializer),
+
+            AttributeValue::S(s) => serializer.serialize_str(s),
+            AttributeValue::N(n) => serializer.serialize_str(n),
+            //AttributeValue::B(b) => serializer.serialize_bytes(b ),
+            AttributeValue::Ss(ss) => serializer.serialize_str(&ss.join(",")),
+            AttributeValue::Ns(ns) => serializer.serialize_str(&ns.join(",")),
+            //AttributeValue::Bs(bs) => serializer.serialize_bytes(&bs.concat()),
+            //AttributeValue::L(l) => serializer.serialize_seq(SeqWrapper::new(l)),
+            //AttributeValue::M(m) => serializer.serialize_map(MapWrapper::new(m)),
+            AttributeValue::Null(_) => serializer.serialize_none(),
+            AttributeValue::Bool(b) => serializer.serialize_bool(*b),
+
             // If there are other variants you can handle them similarly
-            _ => Err(serde::ser::Error::custom("Unsupported AttributeValue type in AttributeValueWrapper")),
+            _ => Err(serde::ser::Error::custom("Unsupported/unimplemented AttributeValue type in AttributeValueWrapper")),
         }
     }
 }
