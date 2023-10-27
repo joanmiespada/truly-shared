@@ -83,6 +83,12 @@ pub struct AttributeValueWrapper{
 }
 
 impl AttributeValueWrapper {
+
+    pub fn new(value: &AttributeValue) -> Self {
+        AttributeValueWrapper {
+            att: value.clone()
+        }
+    }
     pub fn get(self) -> AttributeValue {
         self.att
     }
