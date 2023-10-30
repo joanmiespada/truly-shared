@@ -1,5 +1,7 @@
+
 use std::fmt::Display;
 
+use derive_builder::Builder;
 use serde::Deserialize;
 use url::Url;
 
@@ -11,85 +13,118 @@ pub static DEV_ENV: &str = "development";
 pub static PROD_ENV: &str = "production";
 pub static STAGE_ENV: &str = "stage";
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Default, Builder)]
 pub struct EnvironmentVariables {
+    #[builder(default)]
     jwt_token_base: Option<String>,
+    #[builder(default)]
     jwt_token_time_exp_hours: Option<String>,
+    #[builder(default)]
     environment: Option<String>,
+    #[builder(default)]
     hmac_secret: Option<String>,
+    #[builder(default)]
     rust_log: Option<String>,
+    #[builder(default)]
     aws_region: Option<String>,
+    #[builder(default)]
     aws_profile: Option<String>,
+    #[builder(default)]
     aws_endpoint: Option<String>,
-
+    #[builder(default)]
     contract_id: Option<u16>,
 
+    #[builder(default)]
     kms_key_id: Option<String>,
+    #[builder(default)]
     queue_mint_async: Option<String>,
+    #[builder(default)]
     topic_arn_mint_async: Option<String>,
+    #[builder(default)]
     dead_letter_queue_mint: Option<String>,
 
+    #[builder(default)]
     shorter_video_in_topic: Option<String>,
+    #[builder(default)]
     shorter_video_out_topic: Option<String>,
+    #[builder(default)]
     hashes_similar_video_in_topic: Option<String>,
+    #[builder(default)]
     matchapi_endpoint: Option<Url>,
 
+    #[builder(default)]
     minting_fails_topic: Option<String>,
 
+    #[builder(default)]
     bucket_video_temp: Option<String>,
+    #[builder(default)]
     bucket_video_permanent: Option<String>,
 
+    #[builder(default)]
     video_result_topic: Option<String>,
 
+    #[builder(default)]
     telemetry: Option<bool>,
+    #[builder(default)]
     telemetry_endpoint: Option<Url>,
 
+    #[builder(default)]
     api_stage: Option<String>,
+    #[builder(default)]
     trace_level: Option<String>,
     
+    #[builder(default)]
     url_base_permanent_images: Option<String>,
 
+    #[builder(default)]
     smtp_host: Option<String>,
+    #[builder(default)]
     smtp_user: Option<String>,
+    #[builder(default)]
     smtp_passw: Option<String>,
 
+    #[builder(default)]
     pagination_token_encoder: Option<String>,
+    #[builder(default="Some(25)")]
+    default_page_size: Option<u32>,
 }
 
 impl EnvironmentVariables {
     pub fn new() -> EnvironmentVariables {
-        EnvironmentVariables {
-            jwt_token_base: None,
-            jwt_token_time_exp_hours: None,
-            environment: None,
-            hmac_secret: None,
-            rust_log: None,
-            aws_region: None,
-            aws_profile: None, 
-            aws_endpoint: None,
-            contract_id: None,
-            kms_key_id: None,
-            queue_mint_async: None,
-            topic_arn_mint_async: None,
-            dead_letter_queue_mint: None,
-            shorter_video_in_topic: None,
-            shorter_video_out_topic: None,
-            hashes_similar_video_in_topic: None,
-            matchapi_endpoint: None,
-            minting_fails_topic: None,
-            bucket_video_temp: None,
-            bucket_video_permanent: None,
-            video_result_topic: None,
-            telemetry: None,
-            telemetry_endpoint: None,
-            api_stage: None,
-            trace_level: None,
-            url_base_permanent_images: None,
-            smtp_host: None,
-            smtp_passw: None,
-            smtp_user: None,
-            pagination_token_encoder: None,
-        }
+        EnvironmentVariablesBuilder::default().build().unwrap()
+        // EnvironmentVariables {
+        //     jwt_token_base: None,
+        //     jwt_token_time_exp_hours: None,
+        //     environment: None,
+        //     hmac_secret: None,
+        //     rust_log: None,
+        //     aws_region: None,
+        //     aws_profile: None, 
+        //     aws_endpoint: None,
+        //     contract_id: None,
+        //     kms_key_id: None,
+        //     queue_mint_async: None,
+        //     topic_arn_mint_async: None,
+        //     dead_letter_queue_mint: None,
+        //     shorter_video_in_topic: None,
+        //     shorter_video_out_topic: None,
+        //     hashes_similar_video_in_topic: None,
+        //     matchapi_endpoint: None,
+        //     minting_fails_topic: None,
+        //     bucket_video_temp: None,
+        //     bucket_video_permanent: None,
+        //     video_result_topic: None,
+        //     telemetry: None,
+        //     telemetry_endpoint: None,
+        //     api_stage: None,
+        //     trace_level: None,
+        //     url_base_permanent_images: None,
+        //     smtp_host: None,
+        //     smtp_passw: None,
+        //     smtp_user: None,
+        //     pagination_token_encoder: None,
+        //     default_page_size: None,
+        // }
     }
     pub fn rust_log(&self) -> Option<String> {
         self.rust_log.clone()
@@ -295,58 +330,87 @@ impl EnvironmentVariables {
         self.pagination_token_encoder = Some(value);
     }
 
+    pub fn default_page_size(&self) -> Option<u32> {
+        self.default_page_size
+    }
+
+    pub fn set_default_page_size(&mut self, value: u32) {
+        self.default_page_size = Some(value);
+    }
+
 }
 
 impl Display for EnvironmentVariables {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{{ 'env': '{:?}', 'rust_log': '{:?}', 'aws': '{:?}', }}",
+            "{{ 
+                'jwt_token_base': '{:?}', 
+                'jwt_token_time_exp_hours': '{:?}', 
+                'environment': '{:?}', 
+                'hmac_secret': '{:?}', 
+                'rust_log': '{:?}', 
+                'aws_region': '{:?}', 
+                'aws_profile': '{:?}', 
+                'aws_endpoint': '{:?}', 
+                'contract_id': '{:?}', 
+                'kms_key_id': '{:?}', 
+                'queue_mint_async': '{:?}', 
+                'topic_arn_mint_async': '{:?}', 
+                'dead_letter_queue_mint': '{:?}', 
+                'shorter_video_in_topic': '{:?}', 
+                'shorter_video_out_topic': '{:?}', 
+                'hashes_similar_video_in_topic': '{:?}', 
+                'matchapi_endpoint': '{:?}', 
+                'minting_fails_topic': '{:?}', 
+                'bucket_video_temp': '{:?}', 
+                'bucket_video_permanent': '{:?}', 
+                'video_result_topic': '{:?}', 
+                'telemetry': '{:?}', 
+                'telemetry_endpoint': '{:?}', 
+                'api_stage': '{:?}', 
+                'trace_level': '{:?}', 
+                'url_base_permanent_images': '{:?}', 
+                'smtp_host': '{:?}', 
+                'smtp_user': '{:?}', 
+                'smtp_passw': '{:?}', 
+                'pagination_token_encoder': '{:?}', 
+                'default_page_size': '{:?}' 
+            }}",
+            self.jwt_token_base,
+            self.jwt_token_time_exp_hours,
             self.environment,
+            self.hmac_secret,
             self.rust_log,
-            self.aws_region 
-            //TODO add other fields
+            self.aws_region,
+            self.aws_profile,
+            self.aws_endpoint,
+            self.contract_id,
+            self.kms_key_id,
+            self.queue_mint_async,
+            self.topic_arn_mint_async,
+            self.dead_letter_queue_mint,
+            self.shorter_video_in_topic,
+            self.shorter_video_out_topic,
+            self.hashes_similar_video_in_topic,
+            self.matchapi_endpoint,
+            self.minting_fails_topic,
+            self.bucket_video_temp,
+            self.bucket_video_permanent,
+            self.video_result_topic,
+            self.telemetry,
+            self.telemetry_endpoint,
+            self.api_stage,
+            self.trace_level,
+            self.url_base_permanent_images,
+            self.smtp_host,
+            self.smtp_user,
+            self.smtp_passw,
+            self.pagination_token_encoder,
+            self.default_page_size
         )
     }
 }
 
-impl Default for EnvironmentVariables {
-    fn default() -> EnvironmentVariables {
-        EnvironmentVariables::new()
-    }
-}
 
-pub struct EnvironmentVariablesBuilder {
-    environment: String,
-    rust_log: String,
-    aws_region: String,
-}
 
-impl EnvironmentVariablesBuilder {
-    pub fn new(env: String, rust_log: String, aws_region: String) -> EnvironmentVariablesBuilder {
-        EnvironmentVariablesBuilder {
-            environment: env,
-            rust_log,
-            aws_region
-        }
-    }
-    pub fn environment(&mut self, env: String) -> &mut EnvironmentVariablesBuilder {
-        self.environment = env;
-        self
-    }
-    pub fn rust_log(&mut self, rust_log: String) -> &mut EnvironmentVariablesBuilder {
-        self.rust_log = rust_log;
-        self
-    }
-    pub fn aws_region(&mut self, aws_region: String) -> &mut EnvironmentVariablesBuilder {
-        self.aws_region= aws_region;
-        self
-    }
-
-    pub fn build(&self) -> EnvironmentVariables {
-        let mut aux = EnvironmentVariables::default();
-        aux.set_environment(self.environment.clone());
-        aux.set_rust_log(self.rust_log.clone());
-        aux
-    }
-}

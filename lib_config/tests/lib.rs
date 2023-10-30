@@ -3,7 +3,7 @@ use lib_config::{
     infra::{
         build_local_stack_connection, create_key, create_secret_manager_with_values,
         uncypher_with_secret_key, cypher_with_secret_key,
-    }, environment::DEV_ENV, environment::ENV_VAR_ENVIRONMENT, stage::remove_stage_prefix, pagination::{pagination_encode_token, pagination_decode_token, PAGINATION_TOKEN_ENCODER}
+    }, environment::{DEV_ENV, EnvironmentVariablesBuilder}, environment::ENV_VAR_ENVIRONMENT, stage::remove_stage_prefix, pagination::{pagination_encode_token, pagination_decode_token, PAGINATION_TOKEN_ENCODER}
 };
 use maplit::hashmap;
 use std::env;
@@ -101,6 +101,19 @@ async fn test_serialize_deserialize_pagination_token() {
     assert_eq!(res2["name"], aux_clone["name"]);
     assert_eq!(res2["surname"], aux_clone["surname"]);
 
+
+}
+
+#[tokio::test]
+async fn test_env_vars() {
+
+    let aux = EnvironmentVariablesBuilder::default()
+        .rust_log(Some("RUST_LOG".to_string()))
+        .build()
+        .unwrap();
+
+
+    assert_eq!(aux.rust_log().unwrap(), "RUST_LOG".to_string());
 
 }
 
