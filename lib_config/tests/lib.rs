@@ -94,9 +94,9 @@ async fn test_serialize_deserialize_pagination_token() {
     let mut config = Config::new();
     config.setup().await;
 
-    let res = pagination_encode_token::<String>(&config.env_vars(), Some(aux));
+    let res = pagination_encode_token::<String>(config.env_vars().pagination_token_encoder(), Some(aux));
 
-    let res2 = pagination_decode_token::<String>(&config.env_vars(), res).unwrap().unwrap();
+    let res2 = pagination_decode_token::<String>(config.env_vars().pagination_token_encoder(), res).unwrap().unwrap();
 
     assert_eq!(res2["name"], aux_clone["name"]);
     assert_eq!(res2["surname"], aux_clone["surname"]);
