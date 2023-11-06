@@ -1,4 +1,5 @@
 use aws_sdk_sns::types::Topic;
+use lib_config::constants::{TAG_PROJECT, VALUE_PROJECT, TAG_SERVICE, API_DOMAIN, TAG_ENVIRONMENT};
 use tracing::log::info;
 
 use crate::errors::AsyncOpError;
@@ -22,7 +23,7 @@ async fn _check_if_exist(
         Ok(rsp) => rsp,
     };
 
-    let topics_arns = topics.topics().unwrap_or_default();
+    let topics_arns = topics.topics();
     let my_topic = Topic::builder().topic_arn(topic_arn.to_owned()).build();
 
     let res = topics_arns.into_iter().filter(|x| **x == my_topic).count();
@@ -96,15 +97,41 @@ pub async fn create(config: &lib_config::config::Config, name: String) -> Result
 
     let client = aws_sdk_sns::client::Client::new(shared_config);
 
+    let env = config.env_vars().environment().unwrap();
     let res_op = client
         .create_topic()
         .name(name)
+        // .tags(
+        //     aws_sdk_sns::types::Tag::builder()
+        //         .key("project".to_owned())
+        //         .value("truly".to_owned())
+        //         .build()
+        //         .unwrap(),
+        // )
+
         .tags(
             aws_sdk_sns::types::Tag::builder()
-                .key("project".to_owned())
-                .value("truly".to_owned())
-                .build(),
+                .key(TAG_PROJECT.to_owned())
+                .value(VALUE_PROJECT.to_owned())
+                .build()
+                .unwrap(),
         )
+        .tags(
+            aws_sdk_sns::types::Tag::builder()
+                .key(TAG_SERVICE.to_owned())
+                .value(API_DOMAIN.to_owned())
+                .build()
+                .unwrap(),
+        )
+        .tags(
+            aws_sdk_sns::types::Tag::builder()
+                .key(TAG_ENVIRONMENT.to_owned())
+                .value( env )
+                .build()
+                .unwrap(),
+        )
+
+
         .send()
         .await;
     match res_op {

@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use lib_config::constants::{VALUE_PROJECT, TAG_SERVICE, TAG_ENVIRONMENT, API_DOMAIN, TAG_PROJECT};
 use tracing::log::debug;
 use url::Url;
 
@@ -25,7 +26,7 @@ async fn _check_if_exist(
         Ok(rsp) => rsp,
     };
 
-    let queue_urls = queues.queue_urls().unwrap_or_default();
+    let queue_urls = queues.queue_urls();
 
     let url = queue_id.to_string();
     // let url = config.env_vars().queue_mint_async().to_owned();
@@ -109,11 +110,14 @@ pub async fn create(config: &lib_config::config::Config, name: String) -> Result
 
     let client = aws_sdk_sqs::client::Client::new(shared_config);
 
+    let env = config.env_vars().environment().unwrap();
     let res_op = client
         .create_queue()
         //.attributes(k, v)
         .queue_name(name)
-        .tags("project", "truly")
+        .tags( TAG_PROJECT.to_owned(), VALUE_PROJECT.to_owned() )
+        .tags( TAG_SERVICE.to_owned(), API_DOMAIN.to_owned() )
+        .tags( TAG_ENVIRONMENT.to_owned(), env)
         .send()
         .await;
     match res_op {

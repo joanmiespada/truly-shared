@@ -5,7 +5,7 @@ use crate::{config::Config, result::ResultE, constants::{VALUE_PROJECT, API_DOMA
 
 lazy_static! {
     pub static ref SECRETS_MANAGER_APP_KEYS: String = format!("{}_{}_secrets", VALUE_PROJECT,API_DOMAIN );
-    pub static ref SECRETS_MANAGER_SMTP: String = format!("{}_{}_smtp", VALUE_PROJECT,API_DOMAIN);
+    pub static ref SECRETS_MANAGER_SMTP: String = format!("{}_{}_smtp2", VALUE_PROJECT,API_DOMAIN);
 }
 
 #[derive(Deserialize, Debug)]

@@ -63,24 +63,26 @@ pub async fn create_key(
             aws_sdk_kms::types::Tag::builder()
                 .tag_key(TAG_PROJECT.to_owned())
                 .tag_value(VALUE_PROJECT.to_owned())
-                .build(),
+                .build()
+                .unwrap(),
         )
         .tags(
             aws_sdk_kms::types::Tag::builder()
                 .tag_key(TAG_SERVICE.to_owned())
                 .tag_value(API_DOMAIN.to_owned())
-                .build(),
+                .build()
+                .unwrap(),
         )
         .tags(
             aws_sdk_kms::types::Tag::builder()
                 .tag_key(TAG_ENVIRONMENT.to_owned())
                 .tag_value( env )
-                .build(),
+                .build()
+                .unwrap(),
         )
         .send()
         .await?;
-    //let id = resp.key_metadata.unwrap().arn().unwrap().to_string();
-    let id = resp.key_metadata.unwrap().key_id().unwrap().to_string();
+    let id = resp.key_metadata.unwrap().key_id().to_string();
 
     Ok(id)
 }

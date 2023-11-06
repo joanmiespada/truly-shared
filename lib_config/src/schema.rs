@@ -15,7 +15,7 @@ pub async fn schema_exists(config: &Config, table: &str) -> ResultE<bool> {
     let table_list = client.list_tables().send().await;
 
     match table_list {
-        Ok(list) => Ok(list.table_names().unwrap().contains(&table.into())),
+        Ok(list) => Ok(list.table_names().contains(&table.into())),
         Err(e) => Err(e.into()),
     }
 }
