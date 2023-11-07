@@ -82,7 +82,9 @@ pub struct EnvironmentVariables {
     smtp_user: Option<String>,
     #[builder(default)]
     smtp_passw: Option<String>,
-
+    #[builder(default)]
+    smtp_from_email: Option<String>,
+    
     #[builder(default)]
     pagination_token_encoder: Option<String>,
     #[builder(default="Some(25)")]
@@ -92,39 +94,6 @@ pub struct EnvironmentVariables {
 impl EnvironmentVariables {
     pub fn new() -> EnvironmentVariables {
         EnvironmentVariablesBuilder::default().build().unwrap()
-        // EnvironmentVariables {
-        //     jwt_token_base: None,
-        //     jwt_token_time_exp_hours: None,
-        //     environment: None,
-        //     hmac_secret: None,
-        //     rust_log: None,
-        //     aws_region: None,
-        //     aws_profile: None, 
-        //     aws_endpoint: None,
-        //     contract_id: None,
-        //     kms_key_id: None,
-        //     queue_mint_async: None,
-        //     topic_arn_mint_async: None,
-        //     dead_letter_queue_mint: None,
-        //     shorter_video_in_topic: None,
-        //     shorter_video_out_topic: None,
-        //     hashes_similar_video_in_topic: None,
-        //     matchapi_endpoint: None,
-        //     minting_fails_topic: None,
-        //     bucket_video_temp: None,
-        //     bucket_video_permanent: None,
-        //     video_result_topic: None,
-        //     telemetry: None,
-        //     telemetry_endpoint: None,
-        //     api_stage: None,
-        //     trace_level: None,
-        //     url_base_permanent_images: None,
-        //     smtp_host: None,
-        //     smtp_passw: None,
-        //     smtp_user: None,
-        //     pagination_token_encoder: None,
-        //     default_page_size: None,
-        // }
     }
     pub fn rust_log(&self) -> Option<String> {
         self.rust_log.clone()
@@ -338,6 +307,14 @@ impl EnvironmentVariables {
         self.default_page_size = Some(value);
     }
 
+    pub fn smtp_from_email(&self) -> Option<String> {
+        self.smtp_from_email.clone()
+    }
+
+    pub fn set_smtp_from_email(&mut self, value: String) {
+        self.smtp_from_email = Some(value);
+    }
+
 }
 
 impl Display for EnvironmentVariables {
@@ -373,7 +350,8 @@ impl Display for EnvironmentVariables {
                 'url_base_permanent_images': '{:?}', 
                 'smtp_host': '{:?}', 
                 'smtp_user': '{:?}', 
-                'smtp_passw': '{:?}', 
+                'smtp_passw': '****', 
+                'smtp_from_email': '{:?}',
                 'pagination_token_encoder': '{:?}', 
                 'default_page_size': '{:?}' 
             }}",
@@ -405,7 +383,8 @@ impl Display for EnvironmentVariables {
             self.url_base_permanent_images,
             self.smtp_host,
             self.smtp_user,
-            self.smtp_passw,
+            //self.smtp_passw,
+            self.smtp_from_email,
             self.pagination_token_encoder,
             self.default_page_size
         )
