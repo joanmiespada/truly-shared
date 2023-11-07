@@ -152,6 +152,7 @@ impl Config {
                     let m_env = self.env_variables.as_mut().unwrap();
                     m_env.set_hmac_secret(secrets.hmac_secret);
                     m_env.set_jwt_token_base(secrets.jwt_token_base);
+                    m_env.set_pagination_token_encoder(secrets.pagination_token);
                     debug!("api secretes found correctly")
                 }
                 Err(e) => {

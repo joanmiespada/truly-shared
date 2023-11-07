@@ -6,15 +6,15 @@ use base64::{engine::general_purpose, Engine as _};
 
 use crate::{
     config::Config,
-    secrets::SECRETS_MANAGER_APP_KEYS,
-    constants::{TAG_PROJECT,VALUE_PROJECT, TAG_ENVIRONMENT,TAG_SERVICE, API_DOMAIN}
+    constants::{TAG_PROJECT,VALUE_PROJECT, TAG_ENVIRONMENT,TAG_SERVICE, API_DOMAIN}, result::ResultE
 };
 
 
 pub async fn create_secret_manager_with_values(
     secrets_json: &str,
+    secret_id: &str,
     config: &Config
-) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+) -> ResultE<()> {
     
     let client = aws_sdk_secretsmanager::client::Client::new(config.aws_config());
 
@@ -22,7 +22,8 @@ pub async fn create_secret_manager_with_values(
 
     client
         .create_secret()
-        .name(SECRETS_MANAGER_APP_KEYS.to_string())
+        //.name(SECRETS_MANAGER_APP_KEYS.to_string())
+        .name(secret_id.to_owned())
         .secret_string(secrets_json)
         .tags(
             aws_sdk_secretsmanager::types::Tag::builder()
@@ -110,7 +111,7 @@ pub async fn cypher_with_secret_key(
     info_to_be_encrypted: &str,
     kms_key_id: &str,
     config: &Config,
-) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+) -> ResultE<String> {
     let aws = config.aws_config();
 
     let client = aws_sdk_kms::Client::new(aws);
@@ -136,7 +137,7 @@ pub async fn uncypher_with_secret_key(
     info_to_be_decyphered: String,
     kms_key_id: &str,
     config: &Config,
-) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+) -> ResultE<String> {
     let aws = config.aws_config();
 
     let value = general_purpose::STANDARD
