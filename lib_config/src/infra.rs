@@ -95,7 +95,8 @@ pub async fn build_local_stack_connection(host_port: u16) -> SdkConfig {
     let region_provider = RegionProviderChain::default_provider().or_else("eu-central-1");
     let creds = Credentials::new("test", "test", None, None, "test");
 
-    let shared_config = aws_config::from_env()
+    let shared_config //= aws_config::from_env()
+            = aws_config::defaults(aws_config::BehaviorVersion::v2023_11_09())
         .region(region_provider)
         .endpoint_url(endpoint_url)
         //.endpoint_resolver(endpoint_resolver.unwrap())

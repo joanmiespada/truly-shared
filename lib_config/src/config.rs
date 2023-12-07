@@ -86,7 +86,7 @@ impl Config {
             let creden = aws_config::profile::ProfileFileCredentialsProvider::builder()
                 .profile_name("localstack")
                 .build();
-            config = aws_config::from_env()
+            config = aws_config::defaults(aws_config::BehaviorVersion::v2023_11_09())
                 .credentials_provider(creden)
                 .region(region_provider)
                 .endpoint_url(aws_endpoint_flag)
@@ -105,13 +105,16 @@ impl Config {
                 creden = aws_config::profile::ProfileFileCredentialsProvider::builder()
                     .profile_name(aws_profile_flag)
                     .build();
-                config = aws_config::from_env()
+                config = aws_config::defaults(aws_config::BehaviorVersion::v2023_11_09())
+                //config = aws_config::from_env()
                     .region(region_provider)
                     .credentials_provider(creden)
                     .load()
                     .await;
             } else {
-                config = aws_config::from_env().region(region_provider).load().await;
+                //config = aws_config::from_env()
+                config = aws_config::defaults(aws_config::BehaviorVersion::v2023_11_09())
+                    .region(region_provider).load().await;
             };
         }
         // else if env_flag == STAGE_ENV {
