@@ -21,6 +21,8 @@ pub struct ApiSecrets {
     pub jwt_token_base: String,
     #[serde(rename = "PAGINATION_TOKEN")]
     pub pagination_token: String,
+    #[serde(rename = "YOUTUBE_API_KEY")]
+    pub youtube_api_key: String,
 }
 
 #[derive(Deserialize, Debug)]

@@ -6,9 +6,6 @@ use serde::Deserialize;
 use url::Url;
 
 pub static ENV_VAR_ENVIRONMENT: &str = "ENVIRONMENT";
-//pub static ENV_VAR_PROJECT_LABEL: &str = "PROJECT";
-//pub static ENV_VAR_SERVICE_LABEL: &str = "SERVICE";
-//pub static ENV_VAR_PROJECT: &str = "truly";
 pub static DEV_ENV: &str = "development";
 pub static PROD_ENV: &str = "production";
 pub static STAGE_ENV: &str = "stage";
@@ -89,6 +86,9 @@ pub struct EnvironmentVariables {
     pagination_token_encoder: Option<String>,
     #[builder(default="Some(25)")]
     default_page_size: Option<u32>,
+
+    #[builder(default)]
+    youtube_api_key: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -314,6 +314,14 @@ impl EnvironmentVariables {
     pub fn set_smtp_from_email(&mut self, value: String) {
         self.smtp_from_email = Some(value);
     }
+    
+    pub fn youtube_api_key(&self) -> Option<String> {
+        self.youtube_api_key.clone()
+    }
+
+    pub fn set_youtube_api_key(&mut self, value: String) {
+        self.youtube_api_key = Some(value);
+    }
 
 }
 
@@ -353,7 +361,8 @@ impl Display for EnvironmentVariables {
                 'smtp_passw': '****', 
                 'smtp_from_email': '{:?}',
                 'pagination_token_encoder': '{:?}', 
-                'default_page_size': '{:?}' 
+                'default_page_size': '{:?}',
+                'youtube_api_key': '***' 
             }}",
             self.jwt_token_base,
             self.jwt_token_time_exp_hours,
@@ -387,6 +396,7 @@ impl Display for EnvironmentVariables {
             self.smtp_from_email,
             self.pagination_token_encoder,
             self.default_page_size
+            //self.youtube_api_key
         )
     }
 }

@@ -156,6 +156,7 @@ impl Config {
                     m_env.set_hmac_secret(secrets.hmac_secret);
                     m_env.set_jwt_token_base(secrets.jwt_token_base);
                     m_env.set_pagination_token_encoder(secrets.pagination_token);
+                    m_env.set_youtube_api_key(secrets.youtube_api_key);
                     debug!("api secretes found correctly")
                 }
                 Err(e) => {
