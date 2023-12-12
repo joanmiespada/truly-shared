@@ -10,27 +10,26 @@ use crate::{
 lazy_static! {
     pub static ref SECRETS_MANAGER_APP_KEYS: String =
         format!("{}_{}_secrets", VALUE_PROJECT, API_DOMAIN);
-    pub static ref SECRETS_MANAGER_SMTP: String = format!("{}_{}_smtp2", VALUE_PROJECT, API_DOMAIN);
 }
 
 #[derive(Deserialize, Debug)]
 pub struct ApiSecrets {
-    #[serde(rename = "HMAC_SECRET")]
+    #[serde(rename = "HMAC_SECRET", default)]
     pub hmac_secret: String,
-    #[serde(rename = "JWT_TOKEN_BASE")]
+    #[serde(rename = "JWT_TOKEN_BASE", default)]
     pub jwt_token_base: String,
-    #[serde(rename = "PAGINATION_TOKEN")]
+    #[serde(rename = "PAGINATION_TOKEN", default)]
     pub pagination_token: String,
-    #[serde(rename = "YOUTUBE_API_KEY")]
+    #[serde(rename = "YOUTUBE_API_KEY", default)]
     pub youtube_api_key: String,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct SMTPSecret {
-    #[serde(rename = "username")]
-    pub user: String,
-    #[serde(rename = "password")]
-    pub pass: String,
+    #[serde(rename = "TWITCH_CLIENT_ID", default)]
+    pub twitch_client_id: String,
+    #[serde(rename = "TWITCH_CLIENT_SECRET", default)]
+    pub twitch_client_secret: String,
+    #[serde(rename = "SMTP_USERNAME", default)]
+    pub smtp_user: String,
+    #[serde(rename = "SMTP_PASSWORD", default)]
+    pub smtp_pass: String,
 }
 
 pub async fn get_secret<T: DeserializeOwned>(config: &Config, secret_id: &String) -> ResultE<T> {

@@ -8,7 +8,7 @@ use lib_config::{
     },
     pagination::{pagination_decode_token, pagination_encode_token},
     result::ResultE,
-    secrets::{SECRETS_MANAGER_APP_KEYS, SECRETS_MANAGER_SMTP},
+    secrets::SECRETS_MANAGER_APP_KEYS,
     stage::remove_stage_prefix,
 };
 use maplit::hashmap;
@@ -105,19 +105,14 @@ async fn test_serialize_deserialize_pagination_token() -> ResultE<()> {
     {
         "HMAC_SECRET" : "localtest_hmac_1234RGsdfg#$%",
         "JWT_TOKEN_BASE": "localtest_jwt_sd543ERGds235$%^",
-        "PAGINATION_TOKEN": "localtest_pag_1234RGsdfg#$%"
+        "PAGINATION_TOKEN": "localtest_pag_1234RGsdfg#$%",
+        "SMTP_USERNAME": "test1_username",
+        "SMTP_PASSWORD": "test1_pass"
     }
     "#;
     create_secret_manager_with_values(secrets_json, SECRETS_MANAGER_APP_KEYS.as_str(), &config)
         .await?;
 
-    let secrets_json = r#"
-    {
-        "username" : "test1",
-        "password" : "test1"
-    }
-    "#;
-    create_secret_manager_with_values(secrets_json, SECRETS_MANAGER_SMTP.as_str(), &config).await?;
 
     config.load_secrets().await;
 

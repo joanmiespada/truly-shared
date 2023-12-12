@@ -7,7 +7,7 @@ use std::fmt::Display;
 
 use crate::{
     environment::{EnvironmentVariables, DEV_ENV, ENV_VAR_ENVIRONMENT, PROD_ENV, STAGE_ENV},
-    secrets::{get_secret, ApiSecrets, SMTPSecret, SECRETS_MANAGER_APP_KEYS, SECRETS_MANAGER_SMTP},
+    secrets::{get_secret, ApiSecrets, SECRETS_MANAGER_APP_KEYS },
 };
 
 #[derive(Clone, Debug)]
@@ -157,6 +157,10 @@ impl Config {
                     m_env.set_jwt_token_base(secrets.jwt_token_base);
                     m_env.set_pagination_token_encoder(secrets.pagination_token);
                     m_env.set_youtube_api_key(secrets.youtube_api_key);
+                    m_env.set_twitch_client_id(secrets.twitch_client_id);
+                    m_env.set_twitch_client_secret(secrets.twitch_client_secret);
+                    m_env.set_smtp_user(secrets.smtp_user);
+                    m_env.set_smtp_passw(secrets.smtp_pass);
                     debug!("api secretes found correctly")
                 }
                 Err(e) => {
@@ -164,25 +168,11 @@ impl Config {
                 }
             }
         }
-        if secret_id == SECRETS_MANAGER_SMTP.clone() {
-            let op = get_secret::<SMTPSecret>(self, &secret_id).await;
-            match op {
-                Ok(secrets) => {
-                    let m_env = self.env_variables.as_mut().unwrap();
-                    m_env.set_smtp_user(secrets.user);
-                    m_env.set_smtp_passw(secrets.pass);
-                    debug!("api secretes found correctly")
-                }
-                Err(e) => {
-                    panic!("secrets {} couldn't find: {}", secret_id , e.to_string())
-                }
-            }
-        }
+        
     }
 
     pub async fn load_secrets(&mut self) {
         self.load_secret(SECRETS_MANAGER_APP_KEYS.to_string()).await;
-        self.load_secret(SECRETS_MANAGER_SMTP.to_string()).await;
     }
 }
 

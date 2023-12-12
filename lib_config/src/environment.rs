@@ -89,6 +89,11 @@ pub struct EnvironmentVariables {
 
     #[builder(default)]
     youtube_api_key: Option<String>,
+
+    #[builder(default)]
+    twitch_client_id: Option<String>,
+    #[builder(default)]
+    twitch_client_secret: Option<String>,
 }
 
 impl EnvironmentVariables {
@@ -322,6 +327,18 @@ impl EnvironmentVariables {
     pub fn set_youtube_api_key(&mut self, value: String) {
         self.youtube_api_key = Some(value);
     }
+    pub fn twitch_client_id(&self) -> Option<String> {
+        self.twitch_client_id.clone()
+    }
+    pub fn set_twitch_client_id(&mut self, value: String) {
+        self.twitch_client_id = Some(value);
+    }
+    pub fn twitch_client_secret(&self) -> Option<String> {
+        self.twitch_client_secret.clone()
+    }
+    pub fn set_twitch_client_secret(&mut self, value: String) {
+        self.twitch_client_secret = Some(value);
+    }
 
 }
 
@@ -363,6 +380,8 @@ impl Display for EnvironmentVariables {
                 'pagination_token_encoder': '{:?}', 
                 'default_page_size': '{:?}',
                 'youtube_api_key': '***' 
+                'twitch_client_id': '{:?}',
+                'twitch_client_secret': '***'
             }}",
             self.jwt_token_base,
             self.jwt_token_time_exp_hours,
@@ -395,8 +414,10 @@ impl Display for EnvironmentVariables {
             //self.smtp_passw,
             self.smtp_from_email,
             self.pagination_token_encoder,
-            self.default_page_size
-            //self.youtube_api_key
+            self.default_page_size,
+            //self.youtube_api_key,
+            self.twitch_client_id,
+            //self.twitch_client_secret,
         )
     }
 }

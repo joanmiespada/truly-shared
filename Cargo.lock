@@ -1187,7 +1187,7 @@ dependencies = [
 
 [[package]]
 name = "lib_config"
-version = "0.0.44"
+version = "0.0.45"
 dependencies = [
  "async-trait",
  "aws-config",
