@@ -16,7 +16,7 @@ use std::env;
 use testcontainers::*;
 
 #[tokio::test]
-async fn set_up_secret() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+async fn set_up_secret() -> ResultE<()> { //Result<(), Box<dyn std::error::Error + Send + Sync>> {
     env::set_var("RUST_LOG", "debug");
     env::set_var(ENV_VAR_ENVIRONMENT, DEV_ENV);
 

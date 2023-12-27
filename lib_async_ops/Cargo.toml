@@ -1,6 +1,6 @@
 [package]
 name="lib_async_ops"
-version="0.0.3"
+version="0.0.4"
 edition = "2021"
 
 [lib]
@@ -17,11 +17,10 @@ tracing-subscriber = { version = "0.3.18", default-features = false, features = 
 validator = { version = "0.16", features = ["derive"] }
 url = {version="2.5.0", features=["serde"] }
 uuid = { version = "1.6.1", features = ["v4","fast-rng",  "macro-diagnostics",  "serde"]}
-aws-sdk-sqs = "1.4.0"
-aws-sdk-sns = "1.4.0"
+aws-sdk-sqs = "1.9.0"
+aws-sdk-sns = "1.9.0"
 env_logger = "0.10.1"
 
 [dev-dependencies]
-tokio = { version="1.34.0", features=["full"]}
-spectral = "0.6.0"
+tokio = { version="1.35.1", features=["full"]}
 testcontainers = { git="https://github.com/joanmiespada/testcontainers-rs", branch="localstack2"  }

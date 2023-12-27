@@ -1,12 +1,10 @@
 use std::str::FromStr;
 
-use lib_config::constants::{VALUE_PROJECT, TAG_SERVICE, TAG_ENVIRONMENT, API_DOMAIN, TAG_PROJECT};
+use lib_config::{constants::{VALUE_PROJECT, TAG_SERVICE, TAG_ENVIRONMENT, API_DOMAIN, TAG_PROJECT}, result::ResultE};
 use tracing::log::debug;
 use url::Url;
 
 use crate::errors::AsyncOpError;
-
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Sync + Send>>;
 
 #[derive(Debug)]
 pub struct SQSMessage {
@@ -18,7 +16,7 @@ async fn _check_if_exist(
     client: &aws_sdk_sqs::client::Client,
     _config: &lib_config::config::Config,
     queue_id: Url,
-) -> Result<String> {
+) -> ResultE<String> {
     let queue_ops = client.list_queues().send().await;
 
     let queues = match queue_ops {
@@ -46,7 +44,7 @@ pub async fn send(
     config: &lib_config::config::Config,
     message: &SQSMessage,
     queue_id: Url,
-) -> Result<String> {
+) -> ResultE<String> {
     let shared_config = config.aws_config();
 
     let client = aws_sdk_sqs::client::Client::new(shared_config);
@@ -73,7 +71,7 @@ pub async fn send(
     }
 }
 
-pub async fn recieve(config: &lib_config::config::Config, queue_id: Url) -> Result<String> {
+pub async fn recieve(config: &lib_config::config::Config, queue_id: Url) -> ResultE<String> {
     //SQSMessage
 
     let shared_config = config.aws_config();
@@ -105,7 +103,7 @@ pub async fn recieve(config: &lib_config::config::Config, queue_id: Url) -> Resu
     // Ok(())
 }
 
-pub async fn create(config: &lib_config::config::Config, name: String) -> Result<Url> {
+pub async fn create(config: &lib_config::config::Config, name: String) -> ResultE<Url> {
     let shared_config = config.aws_config();
 
     let client = aws_sdk_sqs::client::Client::new(shared_config);
@@ -129,7 +127,7 @@ pub async fn create(config: &lib_config::config::Config, name: String) -> Result
         }
     }
 }
-pub async fn delete(config: &lib_config::config::Config, queue_id: Url) -> Result<()> {
+pub async fn delete(config: &lib_config::config::Config, queue_id: Url) -> ResultE<()> {
     let shared_config = config.aws_config();
 
     let client = aws_sdk_sqs::client::Client::new(shared_config);

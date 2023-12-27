@@ -1,10 +1,9 @@
 use aws_sdk_sns::types::Topic;
-use lib_config::constants::{TAG_PROJECT, VALUE_PROJECT, TAG_SERVICE, API_DOMAIN, TAG_ENVIRONMENT};
+use lib_config::{constants::{TAG_PROJECT, VALUE_PROJECT, TAG_SERVICE, API_DOMAIN, TAG_ENVIRONMENT}, result::ResultE};
 use tracing::log::info;
 
 use crate::errors::AsyncOpError;
 
-type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Sync + Send>>;
 
 #[derive(Debug)]
 pub struct SNSMessage {
@@ -15,7 +14,7 @@ async fn _check_if_exist(
     client: &aws_sdk_sns::client::Client,
     _config: &lib_config::config::Config,
     topic_arn: String,
-) -> Result<String> {
+) -> ResultE<String> {
     let topics_ops = client.list_topics().send().await;
 
     let topics = match topics_ops {
@@ -42,7 +41,7 @@ pub async fn send(
     config: &lib_config::config::Config,
     message: &SNSMessage,
     topic_arn: String,
-) -> Result<String> {
+) -> ResultE<String> {
     let shared_config = config.aws_config();
 
     let client = aws_sdk_sns::client::Client::new(shared_config);
@@ -69,30 +68,7 @@ pub async fn send(
     }
 }
 
-// pub async fn subscribe_email(config: &lib_config::config::Config, queue_id: Url) -> Result<String>{
-
-//     let shared_config = config.aws_config();
-//     let client = aws_sdk_sns::client::Client::new(shared_config);
-//     //let queue_url = find(&client, config).await?;
-//     let queue_url = queue_id.to_string();
-
-//     let rcv_message_output = client.receive_message().queue_url(queue_url.clone()).send().await?;
-
-//     debug!("Messages from queue with url: {}", queue_url);
-
-//     let message = rcv_message_output.messages.unwrap_or_default().first().unwrap().clone();
-//     return Ok(message.body().unwrap().to_owned());
-
-//     // for message in rcv_message_output.messages.unwrap_or_default() {
-//     //     debug!("Got the message: {:#?}", message);
-//     //     message.body()
-//     // }
-
-//     // Ok(())
-
-// }
-
-pub async fn create(config: &lib_config::config::Config, name: String) -> Result<String> {
+pub async fn create(config: &lib_config::config::Config, name: String) -> ResultE<String> {
     let shared_config = config.aws_config();
 
     let client = aws_sdk_sns::client::Client::new(shared_config);
@@ -101,14 +77,6 @@ pub async fn create(config: &lib_config::config::Config, name: String) -> Result
     let res_op = client
         .create_topic()
         .name(name)
-        // .tags(
-        //     aws_sdk_sns::types::Tag::builder()
-        //         .key("project".to_owned())
-        //         .value("truly".to_owned())
-        //         .build()
-        //         .unwrap(),
-        // )
-
         .tags(
             aws_sdk_sns::types::Tag::builder()
                 .key(TAG_PROJECT.to_owned())
@@ -135,14 +103,14 @@ pub async fn create(config: &lib_config::config::Config, name: String) -> Result
         .send()
         .await;
     match res_op {
-        Err(e) => Err(AsyncOpError { 0: e.to_string() }.into()),
+        Err(e) => panic!("{}",e ), //Err(AsyncOpError { 0: e.to_string() }.into()),
         Ok(v) => {
             let aux = v.topic_arn().unwrap_or_default().to_string();
             Ok(aux)
         }
     }
 }
-pub async fn delete(config: &lib_config::config::Config, topic_arn: String) -> Result<()> {
+pub async fn delete(config: &lib_config::config::Config, topic_arn: String) -> ResultE<()> {
     let shared_config = config.aws_config();
 
     let client = aws_sdk_sns::client::Client::new(shared_config);
