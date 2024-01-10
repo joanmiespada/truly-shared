@@ -120,7 +120,7 @@ pub async fn cypher_with_secret_key(
     let blob = Blob::new(info_to_be_encrypted.as_bytes());
     let resp_op = client
         .encrypt()
-        .key_id(kms_key_id.clone())
+        .key_id(kms_key_id)
         .plaintext(blob)
         .send()
         .await;

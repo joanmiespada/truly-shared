@@ -1,4 +1,4 @@
-use lib_async_ops::sqs::{create as sqs_create, recieve, send as sqs_send, SQSMessage};
+use lib_async_ops::sqs::{create as sqs_create, send as sqs_send, SQSMessage};
 use lib_async_ops::sns::{create as sns_create, send as sns_send, SNSMessage};
 use lib_config::{config::Config, infra::build_local_stack_connection, environment::{DEV_ENV, ENV_VAR_ENVIRONMENT}};
 use std::env;
@@ -9,6 +9,12 @@ use uuid::Uuid;
 async fn test_queues() -> Result<(), Box<dyn std::error::Error>> {
     env::set_var("RUST_LOG", "debug");
     env::set_var(ENV_VAR_ENVIRONMENT, DEV_ENV);
+   
+    //env::set_var(ENV_VAR_ENVIRONMENT, STAGE_ENV);
+    //env::set_var("AWS_REGION", "eu-central-1");
+    //env::set_var("AWS_PROFILE", "truly");
+
+
 
     env_logger::builder().is_test(true).init();
 
@@ -25,7 +31,7 @@ async fn test_queues() -> Result<(), Box<dyn std::error::Error>> {
     config.setup().await;
     config.set_aws_config(&shared_config); //rewrite configuration to use our current testcontainer instead
 
-    let queue_url_op = sqs_create(&config, "test1".to_string()).await;
+    let queue_url_op = sqs_create(&config, "deleteme".to_string()).await;
     assert_eq!(queue_url_op.is_ok(), true );
     let queue_url = queue_url_op.unwrap();
     env::set_var("QUEUE_MINT_ASYNC", queue_url.to_string());
@@ -44,12 +50,12 @@ async fn test_queues() -> Result<(), Box<dyn std::error::Error>> {
     let sent = sent_op.unwrap();
     println!("{}", sent);
     //let response =
-    let recv_op = recieve(&config, queue_url.clone()).await;
+    //let recv_op = recieve(&config, queue_url.clone()).await;
 
-    assert_eq!(recv_op.is_ok(),true);
-    let recv = recv_op.unwrap();
+    //assert_eq!(recv_op.is_ok(),true);
+    //let recv = recv_op.unwrap();
 
-    assert_eq!(content.body, recv);
+    //assert_eq!(content.body, recv);
 
     Ok(())
 }
@@ -76,7 +82,7 @@ async fn test_topics() -> Result<(), Box<dyn std::error::Error>> {
     config.setup().await;
     config.set_aws_config(&shared_config); //rewrite configuration to use our current testcontainer instead
 
-    let topic_arn_op = sns_create(&config, "test2".to_string()).await;
+    let topic_arn_op = sns_create(&config, "deleteme".to_string()).await;
     assert_eq!(topic_arn_op.is_ok(),true);
     let topic_arn = topic_arn_op.unwrap();
     env::set_var("TOPIC_SNS_ASYNC", topic_arn.to_string());

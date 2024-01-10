@@ -1174,7 +1174,7 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "lib_async_ops"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "aws-sdk-sns",
  "aws-sdk-sqs",
@@ -1193,7 +1193,7 @@ dependencies = [
 
 [[package]]
 name = "lib_config"
-version = "0.0.46"
+version = "0.0.47"
 dependencies = [
  "async-trait",
  "aws-config",

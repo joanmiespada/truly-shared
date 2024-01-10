@@ -64,7 +64,7 @@ pub fn pagination_decode_token<T: DeserializeOwned >(encoder:Option<String>, tok
                 return Err("Pagination decode token checksum does not match. Token may have been tampered!");
             }
 
-            Ok(Some(serde_json::from_str(data_str.clone()).map_err(|_| "Failed to deserialize data into HashMap")?))
+            Ok(Some(serde_json::from_str(data_str).map_err(|_| "Failed to deserialize data into HashMap")?))
         },
         None => Ok(None)
     }
