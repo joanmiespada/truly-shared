@@ -12,19 +12,19 @@ name="integration"
 path="tests/lib.rs"
 
 [dependencies]
-aws-sdk-dynamodb = "1.20.0"
-aws-config = "1.1.9"
+aws-sdk-dynamodb = "1.23.0"
+aws-config = "1.2.1"
 env_logger = "0.11.3"
 dotenv = "0.15.0"
 envy = "0.4.2"
-serde = { version = "1.0.197", features = ["derive"] }
-serde_json = "1.0.115"
-aws-sdk-secretsmanager = "1.20.1"
+serde = { version = "1.0.198", features = ["derive"] }
+serde_json = "1.0.116"
+aws-sdk-secretsmanager = "1.23.0"
 log = "0.4.21"
-aws-types = "1.1.8"
-aws-sdk-kms = "1.19.0"
+aws-types = "1.2.0"
+aws-sdk-kms = "1.22.0"
 base64 = "0.22.0"
-async-trait = "0.1.79"
+async-trait = "0.1.80"
 #opentelemetry = { version = "0.21.0", default-features = false, features = ["trace", "rt-tokio"] }
 #opentelemetry-otlp = "0.14.0"
 #opentelemetry-semantic-conventions = "0.13.0"
@@ -33,7 +33,7 @@ async-trait = "0.1.79"
 #tracing-opentelemetry = "0.22.0"
 #tracing-subscriber = { version = "0.3.18", features = ["fmt","env-filter"] }
 url = {version="2.5.0", features = ["serde"]}
-chrono = {version="0.4.37", features = ["serde"] }
+chrono = {version="0.4.38", features = ["serde"] }
 tokio = { version="1.37.0", features=["full"]}
 lazy_static = "1.4.0"
 sha2 = "0.10.8"
@@ -42,7 +42,7 @@ derive_builder = "0.20.0"
 
 
 [dev-dependencies]
-aws-types = "1.1.8"
+aws-types = "1.2.0"
 spectral = "0.6.0"
 #testcontainers = "0.14.0"
 testcontainers = { git="https://github.com/joanmiespada/testcontainers-rs", branch="localstack2"  }
